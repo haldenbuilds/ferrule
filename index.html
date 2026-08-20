@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FERRULE checkout</title>
+<style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:560px;margin:12vh auto;padding:0 20px;color:#1a1d21;line-height:1.6}a.btn{display:inline-block;background:#1a1d21;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none;margin-top:12px}p.small{color:#666;font-size:14px}</style></head>
+<body>
+<h1>FERRULE</h1>
+<p id="msg">Checking availability for your region&hellip;</p>
+<div id="go" style="display:none"><p>Sales are currently open to buyers in the United States.</p><a class="btn" href="WHOP_CHECKOUT_URL">Continue to checkout</a></div>
+<p class="small" id="fallback" style="display:none">If the check does not complete: sales are currently limited to buyers in the United States. If that is you, <a href="WHOP_CHECKOUT_URL">continue to checkout</a>; otherwise see the note <a href="unavailable.html">here</a>.</p>
+<script>
+fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
+  if(d && d.country_code==='US'){document.getElementById('msg').style.display='none';document.getElementById('go').style.display='block';}
+  else{window.location.href='unavailable.html';}
+}).catch(()=>{document.getElementById('msg').style.display='none';document.getElementById('fallback').style.display='block';});
+</script>
+<noscript><p>Sales are currently limited to buyers in the United States. If that is you, <a href="WHOP_CHECKOUT_URL">continue to checkout</a>.</p></noscript>
+</body></html>
