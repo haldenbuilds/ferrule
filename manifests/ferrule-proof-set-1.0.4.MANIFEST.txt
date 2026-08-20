@@ -1,0 +1,63 @@
+The FERRULE Proof Set, Release 1.0: the complete file list
+
+83 files. The 81 listed below total about 984 KiB. Node 18 or newer, zero
+dependencies, no network access, no account.
+
+This is every file in the release, by name and size. It is published so that what you are
+getting is a list you can read rather than a description you have to trust. After you
+download, harness/delivery.json carries the sha256 of each one and the harness checks
+every file against it before it runs anything.
+
+(Two files are not listed below. harness/delivery.json is not, because nothing carries
+its own hash. This file is not, because it cannot state its own size without changing it.
+Both ship, and delivery.json does carry this file's hash. That is also why the size above
+is stated over the 81 on the list rather than over all 83: a file whose size cannot be
+stated here is one this total has no honest way to include, and a count of one set printed
+beside a sum of another is a number nobody can reconcile against the list.)
+
+(One file below ships and is deliberately NOT hashed: harness/fence.denylist.json. It
+arrives empty and the release asks you to fill it in, so requiring it to match the bytes
+that shipped would mean following the instructions breaks the integrity check. The two
+rules cannot both apply to one file, and the one that gives way is the hash.)
+
+(top level): AGENT-INSTRUCTIONS.md (9,390 B), BOUNDARY.md (9,860 B), INSTALL-MANUAL.md (7,788 B), manifest.json (23,440 B), OPERATING-CONVENTIONS.md (5,867 B), QUICK-RUN.md (5,100 B), START-HERE.md (6,884 B)
+
+components/capability-authoring/checks: capability-authoring.check.mjs (16,564 B)
+
+components/claim-compiler: BUILD.md (9,635 B), claims.example.json (3,060 B)
+
+components/claim-compiler/templates: compile-claims.mjs (26,634 B)
+
+components/deadend-linter/checks: deadend-linter.check.mjs (25,205 B)
+
+components/dryrun-lab: BUILD.md (16,943 B), dryrun-target.example.json (4,384 B)
+
+components/dryrun-lab/templates: adversarial-inputs.mjs (25,949 B), dry-run.mjs (21,967 B)
+
+components/install-layer/checks: install-layer.check.mjs (35,677 B)
+
+components/lane-control: BUILD.md (7,177 B), DONE-DEFINITION.worksheet.md (4,377 B), TRAPS.md (5,078 B)
+
+components/lane-control/templates: completion-signal.mjs (8,030 B), contract-lint.mjs (6,334 B), KICKOFF.template.md (2,841 B), watchdog.mjs (11,870 B)
+
+components/runbook-compiler/checks: runbook-compiler.check.mjs (48,690 B)
+
+components/session-control: BUILD.md (5,065 B), hooks.settings.example.json (2,869 B), scope.example.json (1,092 B), TRAPS.md (4,600 B), write-fence.patterns.example.json (1,957 B)
+
+components/session-control/templates: config-snapshot.mjs (6,324 B), firing-selfcheck.mjs (8,074 B), scope-gate.mjs (9,638 B), write-fence.mjs (5,250 B)
+
+components/transcript-auditor: BUILD.md (9,250 B), rubric.example.json (4,151 B)
+
+components/transcript-auditor/templates: audit-transcript.mjs (26,380 B)
+
+examples/02-unattended-lane: run-demo.mjs (5,652 B), WALKTHROUGH.md (5,444 B)
+
+harness/lib: ack.mjs (13,442 B), fence.mjs (26,025 B), integrity.mjs (14,981 B), probe.mjs (1,433 B), report.mjs (45,372 B), strict.mjs (12,292 B), verdict-control.mjs (49,463 B)
+---
+
+What you also get, which is not a file
+
+Nothing. There is no onboarding call, no setup review, no support entitlement and no
+update stream attached to this release. What is on this list is what there is, and that is
+a deliberate shape rather than an omission: everything here is delivered by download, with
+nobody on the other side, which is why the list can be complete.
