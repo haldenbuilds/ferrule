@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" data-look="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>The FERRULE Proof Set, Release 1.0</title>
+<meta name="description" content="A component-by-component breakdown of the FERRULE Proof Set: nine components in two halves, five verdicts, the list of what is not in it, and the file list published before you buy.">
+<style>
+/* FERRULE v2, CRIMP MARK. Self-contained: no fetched fonts, no images,
+   no external stylesheet. Token source of truth: tokens-v2.css.
+   Token block carried from pages/manifests/index.html (the fullest of the
+   three), extended with the five verdict hues this page needs. */
+:root{
+  --ink-950:#090a09; --ink-900:#0c0e0d; --ink-850:#101211; --ink-800:#141716;
+  --ink-750:#191c1b; --ink-700:#1e2221; --ink-650:#252a28;
+  --line:#212624; --line-2:#2c3230; --line-3:#3a413e;
+  --metal-900:#1c201f; --metal-700:#363c3a; --metal-500:#666e6a;
+  --metal-300:#9ba39c; --metal-100:#c6ccc4; --metal-spec:#e4e8df;
+  --gauge:#7fa3b4; --gauge-mid:#6b8d9d; --gauge-lo:#4e6875; --gauge-dim:#35474f;
+  --gauge-wash:rgba(127,163,180,.10); --gauge-glow:rgba(127,163,180,.26);
+  --pass:#47a97c; --pass-hi:#71c79b; --pass-ex:#3e8a68;
+  --pass-wash:rgba(71,169,124,.13); --pass-glow:rgba(71,169,124,.30);
+  --hold:#c58a33; --hold-hi:#e0ac5e; --hold-wash:rgba(197,138,51,.12); --hold-glow:rgba(197,138,51,.28);
+  --fail:#d6483c; --fail-hi:#ee7166; --fail-wash:rgba(214,72,60,.12); --fail-glow:rgba(214,72,60,.26);
+  --unknown:#8b938d; --unknown-hi:#adb4ae; --unknown-wash:rgba(139,147,141,.10); --unknown-glow:rgba(139,147,141,.16);
+  --type-hi:#e7e9e3; --type:#c4c9c2; --type-2:#8f958e; --type-3:#616763; --type-4:#3d433f;
+  --face-mono:Consolas,"Cascadia Mono","Cascadia Code","SFMono-Regular","SF Mono",Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace;
+  --face-din:Bahnschrift,"DIN Alternate","DIN Condensed","Avenir Next Condensed","HelveticaNeue-CondensedBold","Liberation Sans Narrow","DejaVu Sans Condensed","Segoe UI",system-ui,sans-serif;
+  --face-text:Bahnschrift,"Segoe UI Variable Text","Segoe UI","Helvetica Neue","Liberation Sans",system-ui,sans-serif;
+  --f-micro:clamp(10px,.62rem + .10vw,12px);
+  --f-fine:clamp(12px,.74rem + .18vw,14px);
+  --f-body:clamp(15px,.90rem + .22vw,17px);
+  --f-lead:clamp(17px,1.00rem + .40vw,21px);
+  --f-sub:clamp(21px,1.10rem + .90vw,30px);
+  --f-head:clamp(29px,1.35rem + 2.20vw,52px);
+  --s-1:6px; --s-2:12px; --s-3:20px; --s-4:32px; --s-5:52px; --s-6:84px;
+  --edge:2px; --hair:1px;
+  --tex-c:214,224,214; --knurl-pitch:4px; --knurl-alpha:.028;
+  --edge-hi:rgba(255,255,255,.055); --edge-lo:rgba(0,0,0,.55); --sink:rgba(0,0,0,.46);
+  --glow-c:168,196,176;
+  --ease:cubic-bezier(.22,.68,.24,1); --ease-out:cubic-bezier(.16,1,.30,1);
+  --dur-1:140ms; --dur-2:240ms; --dur-3:420ms;
+}
+/* Dark is the standard. Light is opt-in and never auto-switches:
+   set data-look="light" on <html>. */
+[data-look="light"]{
+  color-scheme:light;
+  --ink-950:#e9e7e0; --ink-900:#efede6; --ink-850:#f3f1ea; --ink-800:#f7f5ef;
+  --ink-750:#efede5; --ink-700:#e3e0d7; --ink-650:#d7d3c8;
+  --line:#d5d1c6; --line-2:#c2bdb0; --line-3:#a8a296;
+  --metal-900:#b9beb4; --metal-700:#9aa096; --metal-500:#787f76;
+  --metal-300:#5b625a; --metal-100:#444b44; --metal-spec:#333a34;
+  --gauge:#3d6070; --gauge-mid:#4f7182; --gauge-lo:#7996a4; --gauge-dim:#a9bec7;
+  --gauge-wash:rgba(61,96,112,.08); --gauge-glow:rgba(61,96,112,.14);
+  --pass:#1e7150; --pass-hi:#14563c; --pass-ex:#2f8963;
+  --pass-wash:rgba(30,113,80,.10); --pass-glow:rgba(30,113,80,.14);
+  --hold:#8a5a11; --hold-hi:#6b4409; --hold-wash:rgba(138,90,17,.10); --hold-glow:rgba(138,90,17,.14);
+  --fail:#a62a20; --fail-hi:#841d15; --fail-wash:rgba(166,42,32,.10); --fail-glow:rgba(166,42,32,.14);
+  --unknown:#5b615c; --unknown-hi:#434841; --unknown-wash:rgba(91,97,92,.09); --unknown-glow:rgba(91,97,92,.12);
+  --type-hi:#191a17; --type:#33352f; --type-2:#5c5f57; --type-3:#83867c; --type-4:#adb0a4;
+  --tex-c:40,44,40; --knurl-alpha:.030;
+  --edge-hi:rgba(255,255,255,.90); --edge-lo:rgba(0,0,0,.10); --sink:rgba(0,0,0,.10);
+  --glow-c:61,96,112;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background-color:var(--ink-950)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(58% 42% at 50% 8%, rgba(var(--glow-c),.048) 0%, rgba(var(--glow-c),.018) 44%, rgba(0,0,0,0) 76%),
+    radial-gradient(130% 100% at 50% 18%, var(--ink-850) 0%, var(--ink-900) 54%, var(--ink-950) 100%);
+  background-color:var(--ink-950);
+  color:var(--type);
+  font-family:var(--face-mono);
+  font-size:var(--f-body);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; align-items:center;
+  padding:var(--s-6) var(--s-3) var(--s-5);
+}
+
+/* ---------------- the ferrule binds the wordmark ---------------- */
+.lockup{display:flex;align-items:center;gap:var(--s-2);width:100%;max-width:760px;margin:0 0 var(--s-5)}
+.band{flex:1 1 auto;height:3px;border-radius:2px;
+  background:linear-gradient(to right,rgba(155,163,156,0) 0%,var(--metal-900) 8%,var(--metal-500) 30%,var(--metal-spec) 50%,var(--metal-500) 70%,var(--metal-900) 92%,rgba(155,163,156,0) 100%);
+  box-shadow:0 1px 0 var(--edge-lo)}
+.cap{flex:none;width:3px;height:14px;border-radius:2px;background:linear-gradient(to bottom,var(--metal-300),var(--metal-900))}
+.wordmark{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-fine);letter-spacing:.42em;text-indent:.42em;color:var(--metal-100);
+  text-shadow:0 1px 0 var(--sink)}
+
+/* ---------------- masthead ---------------- */
+.masthead{width:100%;max-width:760px;margin-bottom:var(--s-4)}
+h1{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-sub);line-height:1.1;letter-spacing:.045em;text-indent:.045em;
+  text-transform:uppercase;color:var(--type-hi);margin:0}
+/* max-width:none is load-bearing. The generic p{max-width:64ch} below is the
+   PROSE measure; a label line is not prose, and 64ch at this size clamps the
+   subtitle to 433px and orphans its last word. */
+.sub{margin:var(--s-2) 0 0;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-fine);letter-spacing:.10em;text-indent:.10em;text-transform:uppercase;
+  color:var(--gauge);max-width:none}
+.lede{margin:var(--s-3) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-lead);line-height:1.55;color:var(--type);max-width:62ch}
+.lede + .lede{margin-top:var(--s-2)}
+
+/* ---------------- plates ---------------- */
+.plate{position:relative;width:100%;max-width:760px;margin-top:var(--s-4);background:var(--ink-800);
+  border:var(--hair) solid var(--line);border-radius:var(--edge);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 1px 0 var(--edge-lo),0 20px 52px var(--sink)}
+.plate::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch)),
+    repeating-linear-gradient(-45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch))}
+
+.head{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4) 0}
+.kicker{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.30em;text-indent:.30em;text-transform:uppercase;color:var(--gauge)}
+.tick{flex:1 1 auto;height:5px;
+  background-image:
+    linear-gradient(to bottom,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px),
+    repeating-linear-gradient(to right,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) 8px);
+  background-size:100% 1px,100% 5px;background-repeat:no-repeat,repeat-x;background-position:0 0,0 0}
+
+.body{padding:var(--s-3) var(--s-4) var(--s-4);position:relative;z-index:1}
+
+h2{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-sub);line-height:1.14;letter-spacing:.03em;color:var(--type-hi);margin:0}
+h3{font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-fine);line-height:1.3;letter-spacing:.22em;text-indent:.22em;
+  text-transform:uppercase;color:var(--type-2);margin:var(--s-4) 0 var(--s-2)}
+h3:first-child{margin-top:0}
+p{margin:var(--s-3) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  line-height:1.62;color:var(--type);max-width:64ch}
+p.dim{color:var(--type-2)}
+p.fine{font-size:var(--f-fine)}
+
+/* ---------------- the crimp: the only vertical accent ---------------- */
+.crimp{position:relative;padding-left:var(--s-3)}
+.crimp::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:1px;
+  background-color:var(--crimp-c,var(--gauge));
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,
+    rgba(0,0,0,.70) 25%,rgba(0,0,0,.70) 29%,
+    rgba(0,0,0,0) 29%,rgba(0,0,0,0) 71%,
+    rgba(0,0,0,.70) 71%,rgba(0,0,0,.70) 75%,
+    rgba(0,0,0,0) 75%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 0 1px var(--edge-lo),0 0 9px var(--crimp-glow,rgba(0,0,0,0));
+  transform-origin:50% 50%;
+  animation:crimp var(--dur-2) var(--ease) backwards}
+.v-pass{--crimp-c:var(--pass);--crimp-glow:var(--pass-glow);--v-fg:var(--pass-hi)}
+.v-pass-ex{--crimp-c:var(--pass-ex);--crimp-glow:var(--pass-glow);--v-fg:var(--pass)}
+.v-hold{--crimp-c:var(--hold);--crimp-glow:var(--hold-glow);--v-fg:var(--hold-hi)}
+.v-fail{--crimp-c:var(--fail);--crimp-glow:var(--fail-glow);--v-fg:var(--fail-hi)}
+.v-unknown{--crimp-c:var(--unknown);--crimp-glow:var(--unknown-glow);--v-fg:var(--unknown-hi)}
+.v-gauge{--crimp-c:var(--gauge);--crimp-glow:var(--gauge-glow);--v-fg:var(--gauge)}
+
+/* ---------------- the component ledger ---------------- */
+.half{margin-top:var(--s-3)}
+.halfhead{display:flex;align-items:baseline;gap:var(--s-2);flex-wrap:wrap}
+.halfname{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-lead);letter-spacing:.03em;color:var(--type-hi)}
+.halfcount{font-family:var(--face-mono);font-size:var(--f-fine);color:var(--gauge);white-space:nowrap}
+.ledger{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.ledger li{margin-top:var(--s-3)}
+.grp{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.ord{flex:none;font-family:var(--face-mono);font-size:var(--f-micro);color:var(--gauge);width:2.4em}
+.col{flex:1 1 16em;min-width:0}
+.gname{font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-body);line-height:1.24;letter-spacing:.02em;color:var(--type-hi)}
+.items{display:block;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.62;color:var(--type-2);margin-top:4px}
+
+/* ---------------- the verdict ladder ---------------- */
+.ladder{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.ladder li{margin-top:var(--s-2)}
+.rung{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.token{flex:none;font-family:var(--face-mono);font-weight:700;font-size:var(--f-fine);
+  letter-spacing:.06em;color:var(--v-fg,var(--type-hi));width:11.5em;overflow-wrap:anywhere}
+.gloss{flex:1 1 15em;min-width:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2)}
+
+/* ---------------- limits ---------------- */
+.limits{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.limits li{margin-top:var(--s-3);font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.62;color:var(--type-2);max-width:66ch}
+.limits .lname{font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  letter-spacing:.02em;color:var(--type)}
+
+/* ---------------- price ---------------- */
+.pricerow{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.price{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-head);line-height:1.06;letter-spacing:.03em;color:var(--type-hi)}
+.pricenote{font-family:var(--face-mono);font-size:var(--f-fine);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gauge)}
+.terms{list-style:none;margin:var(--s-3) 0 0;padding:0}
+.terms li{margin-top:var(--s-2);display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.terms .k{flex:none;width:9.5em;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.16em;text-indent:.16em;text-transform:uppercase;color:var(--gauge)}
+.terms .v{flex:1 1 16em;min-width:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2)}
+
+a{color:var(--gauge);text-decoration:none;border-bottom:1px solid var(--gauge-dim);
+  transition:border-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+a:hover,a:focus-visible{color:var(--type-hi);border-bottom-color:var(--gauge)}
+a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
+
+/* ---------------- the key: a crimped button ---------------- */
+.btn{display:inline-flex;align-items:center;gap:.8em;position:relative;
+  margin-top:var(--s-4);padding:14px 22px 14px 26px;
+  font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-body);letter-spacing:.045em;text-decoration:none;color:var(--type-hi);
+  background:linear-gradient(to bottom,var(--ink-650),var(--ink-750));
+  border:var(--hair) solid var(--metal-700);border-radius:var(--edge);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 2px 0 var(--edge-lo),0 10px 26px var(--sink);
+  transition:transform var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
+.btn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-top-left-radius:var(--edge);border-bottom-left-radius:var(--edge);
+  background-color:var(--pass);
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 27%,
+    rgba(0,0,0,.70) 27%,rgba(0,0,0,.70) 32%,
+    rgba(0,0,0,0) 32%,rgba(0,0,0,0) 68%,
+    rgba(0,0,0,.70) 68%,rgba(0,0,0,.70) 73%,
+    rgba(0,0,0,0) 73%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 8px var(--pass-glow);
+  transition:box-shadow var(--dur-1) var(--ease)}
+.btn:hover,.btn:focus-visible{transform:translateY(-1px);border-color:var(--metal-500);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 3px 0 var(--edge-lo),0 14px 32px var(--sink)}
+.btn:hover::before,.btn:focus-visible::before{box-shadow:0 0 16px var(--pass-glow)}
+.btn:active{transform:translateY(0);box-shadow:inset 0 1px 3px var(--edge-lo)}
+.btn:focus-visible{outline:2px solid var(--gauge);outline-offset:3px}
+.btn .arrow{font-family:var(--face-mono);color:var(--pass);font-size:.86em}
+.btnnote{margin:var(--s-2) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:62ch}
+
+/* ---------------- foot ---------------- */
+.foot{width:100%;max-width:760px;margin-top:var(--s-5);display:flex;gap:var(--s-3);align-items:flex-start}
+.foot .rule{flex:none;width:26px;height:1px;margin-top:.72em;background:var(--line-3)}
+.foot p{margin:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:62ch}
+
+@keyframes crimp{from{transform:scaleY(0);opacity:0}}
+@keyframes lift{from{opacity:0;transform:translateY(8px)}}
+.lockup{animation:lift var(--dur-3) var(--ease-out) backwards}
+.masthead{animation:lift var(--dur-3) var(--ease-out) 60ms backwards}
+.plate{animation:lift var(--dur-3) var(--ease-out) 120ms backwards}
+.foot{animation:lift var(--dur-3) var(--ease-out) 190ms backwards}
+
+@media (prefers-reduced-motion:reduce){
+  .lockup,.masthead,.plate,.foot,.crimp,.crimp::before,.btn,a{animation:none !important;transition:none !important}
+}
+@media (max-width:560px){
+  body{padding:var(--s-5) var(--s-2) var(--s-4)}
+  .head{padding:var(--s-2) var(--s-3) 0}
+  .body{padding:var(--s-3) var(--s-3) var(--s-3)}
+  .ord{width:auto}
+  .token{width:100%}
+  .terms .k{width:100%}
+  .btn{width:100%;justify-content:space-between}
+}
+</style>
+</head>
+<body>
+
+<header class="lockup">
+  <span class="cap"></span>
+  <span class="band"></span>
+  <span class="wordmark">FERRULE</span>
+  <span class="band"></span>
+  <span class="cap"></span>
+</header>
+
+<div class="masthead">
+  <h1>The FERRULE Proof Set, Release 1.0</h1>
+  <p class="sub">Nine components, and the list of what nothing is watching</p>
+  <p class="lede">Write down what a good run is supposed to change. This release turns each line into a check that can fail, then shows you which promises no process is watching yet.</p>
+  <p class="lede">You drop nine components into the harness you already use, plus a verification harness that fails loudly and points at the piece that did not land.</p>
+</div>
+
+<!-- ================= THE NINE COMPONENTS ================= -->
+<main class="plate">
+  <div class="head">
+    <span class="kicker">What is in it</span>
+    <span class="tick"></span>
+  </div>
+
+  <div class="body">
+    <h3>Nine components, in two halves</h3>
+    <p>The first half is about getting a system installed and proving it landed. The second is about the work the installed system does, which is a different question and the one nobody usually has an instrument for.</p>
+
+    <div class="half">
+      <div class="halfhead">
+        <span class="halfname">Landing it</span>
+        <span class="halfcount">4 components</span>
+      </div>
+      <ol class="ledger">
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">01</span>
+            <span class="col">
+              <span class="gname">Session control</span>
+              <span class="items">What a session may write, what patterns stop a write, and proof your hooks actually fire rather than merely being configured.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">02</span>
+            <span class="col">
+              <span class="gname">Lane control</span>
+              <span class="items">Firing work nobody is watching, and knowing honestly whether it finished. The worker cannot write its own completion flag.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">03</span>
+            <span class="col">
+              <span class="gname">Capability authoring</span>
+              <span class="items">Scaffolds for a capability and a worker, plus a held-out case set graded on outcomes rather than wording. A case set that cannot fail is refused.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">04</span>
+            <span class="col">
+              <span class="gname">Install layer</span>
+              <span class="items">Landing a package in an environment that is not yours: a plan-then-apply runner that will not write outside its root, a collision resolver that stops rather than guesses, and a certifier that proves it can fail first.</span>
+            </span>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="half">
+      <div class="halfhead">
+        <span class="halfname">The work it does</span>
+        <span class="halfcount">5 components</span>
+      </div>
+      <ol class="ledger">
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">05</span>
+            <span class="col">
+              <span class="gname">Claim compiler</span>
+              <span class="items">You declare each thing the finished system should do. It compiles every declaration into a check that can fail, runs it against the artifacts your system leaves behind, and reports which of your claims are asserted with nothing watching them.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">06</span>
+            <span class="col">
+              <span class="gname">Dead-end linter</span>
+              <span class="items">Reads a workflow you declare and names the states nothing reaches, the states with no way out, the endings that report success with no artifact, and the graph that cannot finish by any route. It runs nothing, so it is usable before the first unattended fire.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">07</span>
+            <span class="col">
+              <span class="gname">Dry-run lab</span>
+              <span class="items">Generates an adversarial input set from a shape you declare and runs your handler against every one of them, inside a context whose effects refuse and record. It reports which inputs broke it and what it would have touched.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">08</span>
+            <span class="col">
+              <span class="gname">Transcript auditor</span>
+              <span class="items">Grades a run's transcript against a rubric you write, and names the lines it failed. It ships no opinion about what a good run looks like: every line graded comes from your own file.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">09</span>
+            <span class="col">
+              <span class="gname">Runbook compiler</span>
+              <span class="items">Reads a verification verdict and compiles the handover document from what was actually built and proven. It cannot carry an all-clear the verdict did not earn.</span>
+            </span>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <h3>Also in the download</h3>
+    <p class="fine dim">Two worked examples, start to verified finish. Trap sheets for the two components with the most traps. An install manual, and an instructions file written for your own assistant to follow.</p>
+  </div>
+</main>
+
+<!-- ================= THE VERDICT ================= -->
+<section class="plate">
+  <div class="head">
+    <span class="kicker">What it reports</span>
+    <span class="tick"></span>
+  </div>
+
+  <div class="body">
+    <h3>The verification harness</h3>
+    <p>One command. It prints one verdict and returns an exit code you do not have to interpret twice.</p>
+
+    <ol class="ladder">
+      <li>
+        <div class="rung crimp v-pass">
+          <span class="token">PROVEN</span>
+          <span class="gloss">Every installed component proved its checks against your own configuration.</span>
+        </div>
+      </li>
+      <li>
+        <div class="rung crimp v-pass-ex">
+          <span class="token">EXAMPLE_PROVEN</span>
+          <span class="gloss">Everything passed against the examples that ship here.</span>
+        </div>
+      </li>
+      <li>
+        <div class="rung crimp v-hold">
+          <span class="token">NOT_YET</span>
+          <span class="gloss">A step only you can do is still open.</span>
+        </div>
+      </li>
+      <li>
+        <div class="rung crimp v-fail">
+          <span class="token">BROKEN</span>
+          <span class="gloss">A check failed and the output names which.</span>
+        </div>
+      </li>
+      <li>
+        <div class="rung crimp v-unknown">
+          <span class="token">CANNOT_VERIFY</span>
+          <span class="gloss">It could not run at all. CANNOT_VERIFY is never a pass.</span>
+        </div>
+      </li>
+    </ol>
+
+    <h3>A fresh download reports EXAMPLE_PROVEN, and that is correct</h3>
+    <p>Copying an example and changing nothing keeps it there, on purpose. The gap between "this code works" and "this is configured for me" is the gap worth having a word for, and only one of the two is worth trusting unattended work to.</p>
+  </div>
+</section>
+
+<!-- ================= THE BOUNDARY ================= -->
+<section class="plate">
+  <div class="head">
+    <span class="kicker">What is not in it</span>
+    <span class="tick"></span>
+  </div>
+
+  <div class="body">
+    <h3>Item by item</h3>
+    <ul class="limits">
+      <li><span class="lname">No cross-component routing, dispatch or capacity layer.</span> The nine components are parts. The layer that decides which worker takes which job is not in this release and is not coming in a later one. The parts are yours; the conductor is not.</li>
+      <li><span class="lname">No values tuned to your work.</span> Every file is generic by construction, and everything specific comes from files you fill in.</li>
+      <li><span class="lname">No agent that acts inside your environment.</span> Nothing here installs itself. Your own assistant does the installing, on your machine, under your hand.</li>
+      <li><span class="lname">No support entitlement, no onboarding call, no setup review.</span> The test applied to every item in this release: could this be delivered by a file with nobody on our side?</li>
+      <li><span class="lname">No opinion about what a good run looks like.</span> The transcript auditor ships no rubric and the claim compiler ships no claims.</li>
+    </ul>
+    <p class="fine dim">This boundary ships as a file inside the download, not as a policy page on a website, so you, a reviewer, and whoever cuts the next release all read the same line.</p>
+  </div>
+</section>
+
+<!-- ================= WHAT YOU GET ================= -->
+<section class="plate">
+  <div class="head">
+    <span class="kicker">What you get, exactly</span>
+    <span class="tick"></span>
+  </div>
+
+  <div class="body">
+    <div class="pricerow crimp v-pass">
+      <span class="price">$297</span>
+      <span class="pricenote">one time</span>
+    </div>
+
+    <ul class="terms">
+      <li><span class="k">Delivery</span><span class="v">Release 1.0, delivered the moment you pay. The download link stays live for 365 days.</span></li>
+      <li><span class="k">File list</span><span class="v">83 files. The list, with sizes and checksums for the 81 content files, is published before you buy: <a href="../manifests/">the release manifests</a> (two delivery-state files are excluded from hashing by design, and the manifest says so). The release checks the hashed files against it before it runs anything.</span></li>
+      <li><span class="k">Runtime</span><span class="v">Built and tested on Node 18 or newer, with no dependencies, no network access and no account. That is a description of this release, not a promise about future ones.</span></li>
+      <li><span class="k">Billing</span><span class="v">No subscription, no recurring charge, nothing to cancel.</span></li>
+      <li><span class="k">Refund</span><span class="v">14 days, on request, no questions. You keep the files.</span></li>
+      <li><span class="k">Territory</span><span class="v">Sold to buyers in the United States.</span></li>
+    </ul>
+
+    <a class="btn" href="../">Continue to checkout <span class="arrow">&gt;</span></a>
+    <p class="btnnote">The next page runs a region check in your browser. If it cannot complete, it says so rather than guessing.</p>
+
+    <p class="fine dim">Two releases on this store cost nothing: the read-only Harness Audit and the install Kit. Everything inside both is listed on <a href="../free/">the free releases page</a>.</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <span class="rule"></span>
+  <p>These are configuration files, templates and scripts. They are tools, not outcomes. What they do is described exactly on this page, and the file manifest is published before you buy.</p>
+</footer>
+
+</body>
+</html>
