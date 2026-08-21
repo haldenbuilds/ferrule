@@ -1,17 +1,288 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en" data-look="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
 <title>FERRULE checkout</title>
-<style>body{font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;max-width:560px;margin:12vh auto;padding:0 20px;color:#1a1d21;line-height:1.6}a.btn{display:inline-block;background:#1a1d21;color:#fff;padding:12px 22px;border-radius:8px;text-decoration:none;margin-top:12px}p.small{color:#666;font-size:14px}</style></head>
+<style>
+/* FERRULE v2, CRIMP MARK. Self-contained: no fetched fonts, no images,
+   no external stylesheet. Token source of truth: tokens-v2.css. */
+:root{
+  --ink-950:#090a09; --ink-900:#0c0e0d; --ink-850:#101211; --ink-800:#141716;
+  --ink-750:#191c1b; --ink-700:#1e2221; --ink-650:#252a28;
+  --line:#212624; --line-2:#2c3230; --line-3:#3a413e;
+  --metal-900:#1c201f; --metal-700:#363c3a; --metal-500:#666e6a;
+  --metal-300:#9ba39c; --metal-100:#c6ccc4; --metal-spec:#e4e8df;
+  --gauge:#7fa3b4; --gauge-mid:#6b8d9d; --gauge-lo:#4e6875; --gauge-dim:#35474f;
+  --gauge-wash:rgba(127,163,180,.10); --gauge-glow:rgba(127,163,180,.26);
+  --pass:#47a97c; --pass-hi:#71c79b; --pass-lo:#2c6e51;
+  --pass-wash:rgba(71,169,124,.13); --pass-glow:rgba(71,169,124,.30);
+  --hold:#c58a33; --hold-hi:#e0ac5e; --hold-wash:rgba(197,138,51,.12); --hold-glow:rgba(197,138,51,.28);
+  --unknown:#8b938d; --unknown-hi:#adb4ae; --unknown-wash:rgba(139,147,141,.10); --unknown-glow:rgba(139,147,141,.16);
+  --type-hi:#e7e9e3; --type:#c4c9c2; --type-2:#8f958e; --type-3:#616763; --type-4:#3d433f;
+  --face-mono:Consolas,"Cascadia Mono","Cascadia Code","SFMono-Regular","SF Mono",Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace;
+  --face-din:Bahnschrift,"DIN Alternate","DIN Condensed","Avenir Next Condensed","HelveticaNeue-CondensedBold","Liberation Sans Narrow","DejaVu Sans Condensed","Segoe UI",system-ui,sans-serif;
+  --face-text:Bahnschrift,"Segoe UI Variable Text","Segoe UI","Helvetica Neue","Liberation Sans",system-ui,sans-serif;
+  --f-micro:clamp(10px,.62rem + .10vw,12px);
+  --f-fine:clamp(12px,.74rem + .18vw,14px);
+  --f-body:clamp(15px,.90rem + .22vw,17px);
+  --f-head:clamp(29px,1.35rem + 2.20vw,52px);
+  --s-1:6px; --s-2:12px; --s-3:20px; --s-4:32px; --s-5:52px; --s-6:84px;
+  --edge:2px; --hair:1px;
+  --tex-c:214,224,214; --knurl-pitch:4px; --knurl-alpha:.028;
+  --edge-hi:rgba(255,255,255,.055); --edge-lo:rgba(0,0,0,.55); --sink:rgba(0,0,0,.46);
+  --glow-c:168,196,176;
+  --ease:cubic-bezier(.22,.68,.24,1); --ease-out:cubic-bezier(.16,1,.30,1);
+  --dur-1:140ms; --dur-2:240ms; --dur-3:420ms;
+}
+/* Dark is the standard. Light is opt-in and never auto-switches:
+   set data-look="light" on <html>. */
+[data-look="light"]{
+  color-scheme:light;
+  --ink-950:#e9e7e0; --ink-900:#efede6; --ink-850:#f3f1ea; --ink-800:#f7f5ef;
+  --ink-750:#efede5; --ink-700:#e3e0d7; --ink-650:#d7d3c8;
+  --line:#d5d1c6; --line-2:#c2bdb0; --line-3:#a8a296;
+  --metal-900:#b9beb4; --metal-700:#9aa096; --metal-500:#787f76;
+  --metal-300:#5b625a; --metal-100:#444b44; --metal-spec:#333a34;
+  --gauge:#3d6070; --gauge-mid:#4f7182; --gauge-lo:#7996a4; --gauge-dim:#a9bec7;
+  --gauge-wash:rgba(61,96,112,.08); --gauge-glow:rgba(61,96,112,.14);
+  --pass:#1e7150; --pass-hi:#14563c; --pass-lo:#a6cbb6;
+  --pass-wash:rgba(30,113,80,.10); --pass-glow:rgba(30,113,80,.14);
+  --hold:#8a5a11; --hold-hi:#6b4409; --hold-wash:rgba(138,90,17,.10); --hold-glow:rgba(138,90,17,.14);
+  --unknown:#5b615c; --unknown-hi:#434841; --unknown-wash:rgba(91,97,92,.09); --unknown-glow:rgba(91,97,92,.12);
+  --type-hi:#191a17; --type:#33352f; --type-2:#5c5f57; --type-3:#83867c; --type-4:#adb0a4;
+  --tex-c:40,44,40; --knurl-alpha:.030;
+  --edge-hi:rgba(255,255,255,.90); --edge-lo:rgba(0,0,0,.10); --sink:rgba(0,0,0,.10);
+  --glow-c:61,96,112;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none !important}
+html,body{margin:0;padding:0}
+html{background-color:var(--ink-950)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(62% 48% at 50% 24%, rgba(var(--glow-c),.055) 0%, rgba(var(--glow-c),.020) 44%, rgba(0,0,0,0) 76%),
+    radial-gradient(120% 96% at 50% 34%, var(--ink-850) 0%, var(--ink-900) 54%, var(--ink-950) 100%);
+  background-color:var(--ink-950);
+  color:var(--type);
+  font-family:var(--face-mono);
+  font-size:var(--f-body);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:var(--s-6) var(--s-3);
+}
+.din{font-family:var(--face-din);font-stretch:87.5%;font-weight:600;letter-spacing:.02em}
+
+/* ---------------- lockup: the ferrule binds the wordmark ---------------- */
+.lockup{display:flex;align-items:center;gap:var(--s-2);width:100%;max-width:600px;margin:0 0 var(--s-5)}
+.band{flex:1 1 auto;height:3px;border-radius:2px;
+  background:linear-gradient(to right,rgba(155,163,156,0) 0%,var(--metal-900) 8%,var(--metal-500) 30%,var(--metal-spec) 50%,var(--metal-500) 70%,var(--metal-900) 92%,rgba(155,163,156,0) 100%);
+  box-shadow:0 1px 0 var(--edge-lo)}
+.cap{flex:none;width:3px;height:14px;border-radius:2px;background:linear-gradient(to bottom,var(--metal-300),var(--metal-900))}
+.wordmark{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-fine);letter-spacing:.42em;text-indent:.42em;color:var(--metal-100);
+  text-shadow:0 1px 0 var(--sink)}
+
+/* ---------------- the plate ---------------- */
+.plate{position:relative;width:100%;max-width:600px;background:var(--ink-800);
+  border:var(--hair) solid var(--line);border-radius:var(--edge);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 1px 0 var(--edge-lo),0 20px 52px var(--sink)}
+.plate::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch)),
+    repeating-linear-gradient(-45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch))}
+
+.head{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4) 0}
+.kicker{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.30em;text-indent:.30em;text-transform:uppercase;color:var(--gauge-mid)}
+.tick{flex:1 1 auto;height:5px;
+  background-image:
+    linear-gradient(to bottom,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px),
+    repeating-linear-gradient(to right,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) 8px);
+  background-size:100% 1px,100% 5px;background-repeat:no-repeat,repeat-x;background-position:0 0,0 0}
+
+.body{padding:var(--s-3) var(--s-4) var(--s-4);position:relative;z-index:1}
+
+/* ---------------- the crimp: the signature geometry ---------------- */
+/* The crimp binds the VERDICT BLOCK, not the whole section. A collar is
+   short; run it the height of a paragraph and the die notches stop reading
+   as notches and start reading as gaps. */
+.state{position:relative;padding-left:var(--s-3)}
+.mark{position:relative}
+.mark::before{content:"";position:absolute;left:calc(-1 * var(--s-3));top:2px;bottom:2px;width:3px;border-radius:1px;
+  background-color:var(--crimp-c);
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,
+    rgba(0,0,0,.70) 25%,rgba(0,0,0,.70) 29%,
+    rgba(0,0,0,0) 29%,rgba(0,0,0,0) 71%,
+    rgba(0,0,0,.70) 71%,rgba(0,0,0,.70) 75%,
+    rgba(0,0,0,0) 75%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 0 1px var(--edge-lo),0 0 9px var(--crimp-glow);
+  transform-origin:50% 50%;
+  animation:crimp var(--dur-2) var(--ease) backwards}
+.v-gauge{--crimp-c:var(--gauge);--crimp-glow:var(--gauge-glow);--v-fg:var(--gauge);--v-wash:var(--gauge-wash)}
+.v-pass{--crimp-c:var(--pass);--crimp-glow:var(--pass-glow);--v-fg:var(--pass-hi);--v-wash:var(--pass-wash)}
+.v-unknown{--crimp-c:var(--unknown);--crimp-glow:var(--unknown-glow);--v-fg:var(--unknown-hi);--v-wash:var(--unknown-wash)}
+
+.verdict{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-head);line-height:1.06;letter-spacing:.055em;text-indent:.055em;
+  text-transform:uppercase;color:var(--v-fg);margin:0;
+  display:flex;align-items:center;gap:.34em;flex-wrap:wrap;
+  animation:settle var(--dur-2) var(--ease-out) 60ms backwards}
+.cursor{display:inline-block;width:.30em;height:.78em;border-radius:1px;flex:none;
+  background-color:var(--crimp-c);
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 27%,
+    rgba(0,0,0,.55) 27%,rgba(0,0,0,.55) 32%,
+    rgba(0,0,0,0) 32%,rgba(0,0,0,0) 68%,
+    rgba(0,0,0,.55) 68%,rgba(0,0,0,.55) 73%,
+    rgba(0,0,0,0) 73%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 10px var(--crimp-glow);
+  animation:blink 1.15s steps(1,end) infinite}
+
+.read{display:flex;align-items:center;gap:.6em;margin:var(--s-2) 0 0;
+  font-family:var(--face-mono);font-size:var(--f-micro);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--type-2)}
+.read .val{color:var(--v-fg)}
+.pip{flex:none;width:3px;height:3px;background:var(--type-3)}
+
+.say{margin:var(--s-3) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-body);line-height:1.62;color:var(--type);max-width:46ch}
+.say a{color:var(--gauge);text-decoration:none;border-bottom:1px solid var(--gauge-dim);
+  transition:border-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+.say a:hover,.say a:focus-visible{color:var(--type-hi);border-bottom-color:var(--gauge)}
+
+/* ---------------- the key: a crimped button ---------------- */
+.btn{display:inline-flex;align-items:center;gap:.8em;position:relative;
+  margin-top:var(--s-4);padding:14px 22px 14px 26px;
+  font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-body);letter-spacing:.045em;text-decoration:none;color:var(--type-hi);
+  background:linear-gradient(to bottom,var(--ink-650),var(--ink-750));
+  border:var(--hair) solid var(--metal-700);border-radius:var(--edge);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 2px 0 var(--edge-lo),0 10px 26px var(--sink);
+  transition:transform var(--dur-1) var(--ease),box-shadow var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
+.btn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  border-top-left-radius:var(--edge);border-bottom-left-radius:var(--edge);
+  background-color:var(--pass);
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 27%,
+    rgba(0,0,0,.70) 27%,rgba(0,0,0,.70) 32%,
+    rgba(0,0,0,0) 32%,rgba(0,0,0,0) 68%,
+    rgba(0,0,0,.70) 68%,rgba(0,0,0,.70) 73%,
+    rgba(0,0,0,0) 73%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 8px var(--pass-glow);
+  transition:box-shadow var(--dur-1) var(--ease)}
+.btn:hover,.btn:focus-visible{transform:translateY(-1px);border-color:var(--metal-500);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 3px 0 var(--edge-lo),0 14px 32px var(--sink)}
+.btn:hover::before,.btn:focus-visible::before{box-shadow:0 0 16px var(--pass-glow)}
+.btn:active{transform:translateY(0);box-shadow:inset 0 1px 3px var(--edge-lo)}
+.btn:focus-visible{outline:2px solid var(--gauge);outline-offset:3px}
+.btn .arrow{font-family:var(--face-mono);color:var(--pass);font-size:.86em}
+
+/* ---------------- foot ---------------- */
+.foot{width:100%;max-width:600px;margin-top:var(--s-4);display:flex;gap:var(--s-3);align-items:flex-start}
+.foot .rule{flex:none;width:26px;height:1px;margin-top:.72em;background:var(--line-3)}
+.foot p{margin:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:56ch}
+
+noscript{display:block;margin-top:var(--s-3)}
+
+@keyframes crimp{from{transform:scaleY(0);opacity:0}}
+@keyframes settle{from{opacity:0;letter-spacing:.20em}}
+@keyframes blink{0%,48%{opacity:1}49%,100%{opacity:.18}}
+@keyframes lift{from{opacity:0;transform:translateY(8px)}}
+.lockup{animation:lift var(--dur-3) var(--ease-out) backwards}
+.plate{animation:lift var(--dur-3) var(--ease-out) 70ms backwards}
+.foot{animation:lift var(--dur-3) var(--ease-out) 140ms backwards}
+
+@media (prefers-reduced-motion:reduce){
+  .lockup,.plate,.foot,.verdict,.mark::before,.cursor,.btn{animation:none !important;transition:none !important}
+}
+@media (max-width:420px){
+  body{padding:var(--s-5) var(--s-2)}
+  .head{padding:var(--s-2) var(--s-3) 0}
+  .body{padding:var(--s-3) var(--s-3) var(--s-3)}
+  .btn{width:100%;justify-content:space-between}
+}
+</style>
+</head>
 <body>
-<h1>FERRULE</h1>
-<p id="msg">Checking availability for your region&hellip;</p>
-<div id="go" style="display:none"><p>Sales are currently open to buyers in the United States.</p><a class="btn" href="WHOP_CHECKOUT_URL">Continue to checkout</a></div>
-<p class="small" id="fallback" style="display:none">If the check does not complete: sales are currently limited to buyers in the United States. If that is you, <a href="WHOP_CHECKOUT_URL">continue to checkout</a>; otherwise see the note <a href="unavailable.html">here</a>.</p>
+
+<header class="lockup">
+  <span class="cap"></span>
+  <span class="band"></span>
+  <span class="wordmark">FERRULE</span>
+  <span class="band"></span>
+  <span class="cap"></span>
+</header>
+
+<main class="plate">
+  <div class="head">
+    <span class="kicker">Region check</span>
+    <span class="tick"></span>
+  </div>
+
+  <div class="body">
+
+    <section id="state-check" class="state v-gauge">
+      <div class="mark">
+        <h1 class="verdict">Checking<span class="cursor"></span></h1>
+        <p class="read"><span class="pip"></span>region<span class="pip"></span><span class="val">reading</span></p>
+      </div>
+      <p class="say">Checking availability for your region.</p>
+    </section>
+
+    <section id="state-go" class="state v-pass" hidden>
+      <div class="mark">
+        <h1 class="verdict">Available</h1>
+        <p class="read"><span class="pip"></span>region<span class="pip"></span><span class="val">united states</span></p>
+      </div>
+      <p class="say">Sales are currently open to buyers in the United States.</p>
+      <a class="btn" href="https://whop.com/checkout/plan_EiJyudE4bGErS">Continue to checkout <span class="arrow">&gt;</span></a>
+    </section>
+
+    <section id="state-unknown" class="state v-unknown" hidden>
+      <div class="mark">
+        <h1 class="verdict">Cannot verify</h1>
+        <p class="read"><span class="pip"></span>region<span class="pip"></span><span class="val">no reading</span></p>
+      </div>
+      <p class="say">The region check did not complete, so this page is not going to guess. Sales are currently limited to buyers in the United States. If that is you, <a href="https://whop.com/checkout/plan_EiJyudE4bGErS">continue to checkout</a>. If it is not, <a href="unavailable.html">read the note</a>.</p>
+    </section>
+
+    <noscript>
+      <section class="state v-unknown">
+        <div class="mark">
+          <h1 class="verdict">Cannot verify</h1>
+        </div>
+        <p class="say">Sales are currently limited to buyers in the United States. If that is you, <a href="https://whop.com/checkout/plan_EiJyudE4bGErS">continue to checkout</a>.</p>
+      </section>
+    </noscript>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <span class="rule"></span>
+  <p>The region check runs in your browser. If it cannot complete, this page says so rather than guessing.</p>
+</footer>
+
 <script>
-fetch('https://ipapi.co/json/').then(r=>r.json()).then(d=>{
-  if(d && d.country_code==='US'){document.getElementById('msg').style.display='none';document.getElementById('go').style.display='block';}
-  else{window.location.href='unavailable.html';}
-}).catch(()=>{document.getElementById('msg').style.display='none';document.getElementById('fallback').style.display='block';});
+(function () {
+  var show = function (id) {
+    var ids = ['state-check', 'state-go', 'state-unknown'], i;
+    for (i = 0; i < ids.length; i++) {
+      document.getElementById(ids[i]).hidden = (ids[i] !== id);
+    }
+  };
+  fetch('https://ipapi.co/json/').then(function (r) { return r.json(); }).then(function (d) {
+    if (d && d.country_code === 'US') { show('state-go'); }
+    else { window.location.href = 'unavailable.html'; }
+  }).catch(function () { show('state-unknown'); });
+})();
 </script>
-<noscript><p>Sales are currently limited to buyers in the United States. If that is you, <a href="WHOP_CHECKOUT_URL">continue to checkout</a>.</p></noscript>
-</body></html>
+
+</body>
+</html>
