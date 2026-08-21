@@ -1,0 +1,37 @@
+{
+    "_about":  "The delivery manifest. Every file that ships, with its byte length and sha256, so you can prove your download is complete and unaltered before you run anything. This file cannot carry its own hash and is not listed in itself.",
+    "package":  "FERRULE Harness Audit 1.0.0",
+    "file_count":  6,
+    "files":  [
+                  {
+                      "path":  "audit-copy.json",
+                      "bytes":  24297,
+                      "sha256":  "420a936a6d554413c3f757116f4613225bf9f5993f69166ca62deea96b788e17"
+                  },
+                  {
+                      "path":  "harness-audit.mjs",
+                      "bytes":  39500,
+                      "sha256":  "381eeca31ee3a5811569875b99bc4a629a32d66218cca30aa6f9576329770420"
+                  },
+                  {
+                      "path":  "harness-profiles.json",
+                      "bytes":  4072,
+                      "sha256":  "94f64f24b82deff4e02283f6f9eb1eec507a660d99238e385f382ef0c7fe4882"
+                  },
+                  {
+                      "path":  "README.md",
+                      "bytes":  8157,
+                      "sha256":  "bfde6e0fac51f4b9ffb06b2828fbdafb486a9846cbd24cdd0207d642bef085f1"
+                  },
+                  {
+                      "path":  "REPORT-SHAPE.md",
+                      "bytes":  6947,
+                      "sha256":  "3b397e1ff87c3c7b98a255f298df2ce3dd6fe46f69b107e484de78947b448210"
+                  },
+                  {
+                      "path":  "selftest-fixture.json",
+                      "bytes":  3597,
+                      "sha256":  "c35f355b372cbbd4586d2a70845ecc7eb567ad833a4c136ded744b6e9d360064"
+                  }
+              ]
+}

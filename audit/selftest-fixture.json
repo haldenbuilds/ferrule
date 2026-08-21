@@ -1,0 +1,83 @@
+{
+  "_about": "THE POSITIVE CONTROL, WITH ITS NEGATIVE HALF. 'broken' is a harness with defects planted on purpose and the exact list of findings the engine must produce. 'clean' is a harness with the same shape and none of those defects, and the engine must produce none of them. A detector that only ever fires is as useless as one that never does, so both halves are graded. Run: node harness-audit.mjs --self-test. Read on disk: node harness-audit.mjs --emit-fixture ./fixture",
+
+  "broken": {
+    "dirs": [],
+    "files": {
+      "CLAUDE.md": "# Example project\n\nConventions for this repository.\n\n- Settings live in `.claude/settings.json`.\n- The release helper is `tools/missing-thing.ps1`.\n- Ask before touching anything under the deploy directory.\n",
+      ".gitignore": "node_modules/\ndist/\n",
+      ".git/HEAD": "ref: refs/heads/main\n",
+      ".env": "PLANTED_FIXTURE_VALUE=this-file-exists-so-the-name-check-has-something-to-find\n",
+      ".claude/settings.json": {
+        "permissions": {
+          "allow": ["Bash(*)"],
+          "deny": [],
+          "ask": []
+        },
+        "hooks": {
+          "SessionStart": [
+            { "hooks": [{ "type": "command", "command": "node .claude/hooks/session-start.mjs" }] }
+          ],
+          "PreToolUse": [
+            { "matcher": "Write", "hooks": [{ "type": "command", "command": "node ${AGENT_PROJECT_DIR}/.claude/hooks/pre-tool.mjs" }] }
+          ],
+          "PostToolUse": [
+            { "matcher": "Write", "hooks": [{ "type": "command", "command": "node .claude/hooks/post-tool.mjs" }] }
+          ]
+        }
+      },
+      ".claude/hooks/session-start.mjs": "// planted: this one exists, so the audit must not report it missing\nprocess.exit(0);\n"
+    },
+    "expect": [
+      "H10:note",
+      "H11:blocker",
+      "H12:unknown",
+      "H13:note",
+      "H20:gap",
+      "H30:gap",
+      "H31:blocker",
+      "H32:blocker",
+      "H33:note",
+      "H40:gap",
+      "H41:note",
+      "H42:gap",
+      "H51:gap",
+      "H61:unknown"
+    ]
+  },
+
+  "clean": {
+    "dirs": ["_signals"],
+    "files": {
+      "CLAUDE.md": "# Example project\n\nConventions for this repository.\n\n- Settings live in `.claude/settings.json`.\n- Ask before pushing.\n",
+      ".claude/settings.json": {
+        "permissions": {
+          "allow": ["Read(src/**)", "Bash(git status:*)"],
+          "deny": ["Bash(rm -rf:*)", "Read(./.env)"],
+          "ask": ["Bash(git push:*)"]
+        },
+        "hooks": {
+          "SessionStart": [
+            { "hooks": [{ "type": "command", "command": "node .claude/hooks/session-start.mjs", "timeout": 20 }] }
+          ],
+          "PreToolUse": [
+            { "matcher": "Write", "hooks": [{ "type": "command", "command": "node .claude/hooks/pre-tool.mjs", "timeout": 20 }] }
+          ],
+          "PostToolUse": [
+            { "matcher": "Write", "hooks": [{ "type": "command", "command": "node .claude/hooks/post-tool.mjs", "timeout": 20 }] }
+          ],
+          "SessionEnd": [
+            { "hooks": [{ "type": "command", "command": "node .claude/hooks/session-end.mjs --log .claude/logs/session.log", "timeout": 20 }] }
+          ]
+        }
+      },
+      ".claude/hooks/session-start.mjs": "process.exit(0);\n",
+      ".claude/hooks/pre-tool.mjs": "process.exit(0);\n",
+      ".claude/hooks/post-tool.mjs": "process.exit(0);\n",
+      ".claude/hooks/session-end.mjs": "process.exit(0);\n",
+      ".claude/logs/session.log": "2026-01-01 00:00:00 session-end fired\n",
+      ".claude/skill-usage.log": "2026-01-01 00:00:00 capability=example\n"
+    },
+    "expect": []
+  }
+}

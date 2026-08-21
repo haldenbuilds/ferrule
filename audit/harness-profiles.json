@@ -1,0 +1,120 @@
+{
+  "_about": "WHERE TO LOOK. This file is data, not code. Add a harness family by adding an entry; nothing in harness-audit.mjs needs to change. Markers are resolved against the project directory first and the agent-config directory second.",
+  "defaults": {
+    "staleDays": 14,
+    "instructionBudgetBytes": 16384,
+    "reportBasename": "harness-audit-report",
+    "skipDirs": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      "out",
+      "vendor",
+      "target",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".next",
+      ".cache",
+      "coverage"
+    ],
+    "secretPatterns": {
+      "_about": "TWO TIERS ON PURPOSE. 'high' is a name that is a credential until proved otherwise, and an uncovered one is reported as broken. 'low' is a name that merely mentions credentials, and an uncovered one is reported as worth knowing. Reporting both at the same volume is how a section gets skipped. 'notCredentials' wins over both.",
+      "high": [
+        "^\\.env$",
+        "^\\.env\\.[A-Za-z0-9_-]+$",
+        "\\.pem$",
+        "\\.p12$",
+        "\\.pfx$",
+        "\\.key$",
+        "^id_rsa$",
+        "^id_ed25519$",
+        "^credentials?\\.(json|ya?ml|txt)$",
+        "^secrets?\\.(json|ya?ml|txt)$",
+        "service[._-]?account[^/]*\\.json$"
+      ],
+      "low": [
+        "(secret|credential|token|apikey|api[._-]key|passwd|password)[^/]*\\.(json|txt|env|cfg|ini|conf)$"
+      ],
+      "notCredentials": [
+        "^\\.env\\.(example|template|sample|dist|schema|defaults?)$",
+        "\\.(example|template|sample|dist)\\.(json|ya?ml|txt|env)$",
+        "^cacert\\.pem$",
+        "^ca-?bundle\\.pem$",
+        "^ca-certificates\\.pem$"
+      ]
+    }
+  },
+  "profiles": [
+    {
+      "id": "claude-code",
+      "label": "Claude Code",
+      "configDir": ".claude",
+      "markers": [".claude", ".claude/settings.json", "CLAUDE.md"],
+      "instructionFiles": ["CLAUDE.md", ".claude/CLAUDE.md"],
+      "settingsFiles": [".claude/settings.json", ".claude/settings.local.json"],
+      "hooksKey": "hooks",
+      "permissionsKey": "permissions",
+      "lifecycle": {
+        "sessionStart": ["SessionStart"],
+        "preTool": ["PreToolUse"],
+        "postTool": ["PostToolUse"],
+        "sessionEnd": ["SessionEnd", "Stop", "SubagentStop"]
+      },
+      "capabilityDirs": {
+        "agents": ".claude/agents",
+        "skills": ".claude/skills",
+        "commands": ".claude/commands",
+        "hook scripts": ".claude/hooks"
+      },
+      "evidenceDirs": [".claude/logs", ".claude/_state", "logs", "_logs"],
+      "signalDirs": ["_signals", ".claude/_signals"],
+      "telemetryFiles": [".claude/skill-usage.log", ".claude/usage.log"]
+    },
+    {
+      "id": "agents-md",
+      "label": "AGENTS.md convention",
+      "configDir": ".codex",
+      "markers": ["AGENTS.md", ".codex"],
+      "instructionFiles": ["AGENTS.md"],
+      "settingsFiles": [".codex/settings.json"],
+      "hooksKey": "hooks",
+      "permissionsKey": "permissions",
+      "lifecycle": {
+        "sessionStart": ["SessionStart", "on_start"],
+        "preTool": ["PreToolUse", "before_tool"],
+        "postTool": ["PostToolUse", "after_tool"],
+        "sessionEnd": ["SessionEnd", "on_stop"]
+      },
+      "capabilityDirs": {
+        "prompts": ".codex/prompts"
+      },
+      "evidenceDirs": [".codex/log", "logs"],
+      "signalDirs": ["_signals"],
+      "telemetryFiles": []
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor rules",
+      "configDir": ".cursor",
+      "markers": [".cursor", ".cursorrules", ".cursor/rules"],
+      "instructionFiles": [".cursorrules"],
+      "settingsFiles": [".cursor/settings.json"],
+      "hooksKey": "hooks",
+      "permissionsKey": "permissions",
+      "lifecycle": {
+        "sessionStart": ["SessionStart"],
+        "preTool": ["PreToolUse"],
+        "postTool": ["PostToolUse"],
+        "sessionEnd": ["SessionEnd"]
+      },
+      "capabilityDirs": {
+        "rules": ".cursor/rules"
+      },
+      "evidenceDirs": ["logs"],
+      "signalDirs": ["_signals"],
+      "telemetryFiles": []
+    }
+  ]
+}

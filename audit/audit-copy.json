@@ -1,0 +1,369 @@
+{
+  "_about": "EVERY BUYER-FACING SENTENCE LIVES HERE. harness-audit.mjs holds the mechanism and nothing else. Rename the tool, restate any finding, or translate the whole thing by editing this file alone. No wordmark is compiled into the engine.",
+  "_branding": "Set brand.name and brand.line to your own. The routes block at the bottom is empty on purpose: fill a route only where you actually have somewhere to send the reader. brand.publisher is carried as data and is not read by the engine; nothing about it prints.",
+
+  "brand": {
+    "name": "Harness Audit",
+    "line": "A read-only look at your coding-agent setup. It reports what you have, what you do not have, and what it could not see. It measures. It does not claim.",
+    "publisher": "FERRULE"
+  },
+
+  "cli": {
+    "help": "Harness Audit\n\n  node harness-audit.mjs                     audit the current directory\n  node harness-audit.mjs --project <dir>     audit a different project\n  node harness-audit.mjs --home <dir>        point at a different agent-config directory\n  node harness-audit.mjs --out <dir>         where the report is written (default: here)\n  node harness-audit.mjs --redact            replace your paths with placeholders before writing\n  node harness-audit.mjs --stale-days <n>    how old evidence may be before it is called stale\n  node harness-audit.mjs --fail-on <level>   none | note | unknown | gap | blocker\n  node harness-audit.mjs --self-test         prove the engine detects and does not over-detect\n  node harness-audit.mjs --emit-fixture <d>  write the self-test fixture to disk so you can read it\n\nIt reads files and runs nothing. It makes no network calls. It writes only inside --out."
+  },
+
+  "severity": {
+    "blocker": {
+      "label": "Broken",
+      "heading": "Broken",
+      "blurb": "Something is declared but is not working, or a fence you appear to want is not in place. These are the findings where the setup and the intent disagree."
+    },
+    "gap": {
+      "label": "Missing",
+      "heading": "Missing",
+      "blurb": "A guardrail that is absent. Absent is not the same as broken. Some of these you may not want, and that is a decision, not a defect."
+    },
+    "unknown": {
+      "label": "Could not see",
+      "heading": "Could not see",
+      "blurb": "The check ran and could not reach its evidence. Read this section first. An unknown is not a pass, and treating it as one is how a setup gets called healthy while it is not."
+    },
+    "note": {
+      "label": "Worth knowing",
+      "heading": "Worth knowing",
+      "blurb": "Not a defect. A property of the setup that tends to matter later."
+    },
+    "ok": {
+      "label": "Clear",
+      "heading": "Clear",
+      "blurb": "Checked, and found in place."
+    }
+  },
+
+  "report": {
+    "readingRule": "**Read the \"could not see\" section first.** Every check that cannot reach its evidence is reported there rather than counted as a pass. A tool that returns green no matter what tells you nothing.",
+    "limits": [
+      "It reads configuration and files on disk. It does not watch a live session, so it cannot prove a hook fired today. It can prove that one left a trace, and that a declared one points at a file that is not there.",
+      "It checks one target per command, the script the interpreter is told to run. Arguments passed to that script are not followed, so a launcher that dispatches to something missing is beyond it.",
+      "It reads the setups it knows about. A harness family it has no profile for is reported as not detected, never as clean.",
+      "The ignore-file check is a plain pattern match. It reads the ignore file in every directory between the file and your project root, and it does not evaluate negation rules or the full pathspec grammar, so a file it calls uncovered may still be covered by a rule it cannot read.",
+      "It never opens a file it flags as secret-shaped. It matches on the name only, so a harmless file with a risky name will be flagged, and a risky file with a harmless name will not.",
+      "Counts of capabilities are counts of files and folders. It does not judge whether any of them are any good.",
+      "It looks four directories deep from your project root and skips build and dependency folders. Something buried deeper is out of range."
+    ],
+    "footer": "Generated locally. Nothing left this machine: this tool makes no network calls, and the report was written by you, on your own setup."
+  },
+
+  "checks": {
+    "H01": {
+      "title": "Harness detected",
+      "variants": {
+        "ok": { "title": "Harness detected", "found": "At least one known agent setup was found and read." },
+        "unknown": {
+          "title": "No harness detected",
+          "found": "None of the known configuration markers were found in the project directory or the agent-config directory.",
+          "cost": "Nothing below could run. This is a report about a directory the audit could not recognise, and it is not a statement that your setup is clean.",
+          "fix": "Point it at the right place with --project and --home, or add a profile for your setup to harness-profiles.json. Both are one line each."
+        }
+      }
+    },
+    "H02": {
+      "title": "Instruction file",
+      "variants": {
+        "ok": { "title": "Instruction file present", "found": "An always-loaded instruction file was found." },
+        "gap": {
+          "title": "No instruction file",
+          "found": "No always-loaded instruction file was found in the project or the agent-config directory.",
+          "cost": "Every session starts from nothing. Conventions you rely on live in your head and in chat history, so the agent re-derives them differently each time, and the drift is invisible until something lands wrong.",
+          "fix": "One file at the project root, holding the conventions you would repeat out loud on day one. Short beats complete: it is read on every turn of every session and you pay for it every time."
+        }
+      }
+    },
+    "H03": {
+      "title": "Settings file",
+      "variants": {
+        "ok": { "title": "Settings file present", "found": "A settings file was found and will be read for hooks and permissions." },
+        "gap": {
+          "title": "No settings file",
+          "found": "No settings file was found, so there is nowhere for hooks or permission rules to be declared.",
+          "cost": "Without a settings file there is no lifecycle wiring and no permission model. Whatever the agent does is whatever it decides to do, and there is no record afterwards.",
+          "fix": "Create the settings file the harness looks for and put one working hook in it. One is enough to prove the wiring; the rest is content."
+        }
+      }
+    },
+    "H04": {
+      "title": "Settings parse",
+      "variants": {
+        "ok": { "title": "Settings parse cleanly", "found": "Every settings file found was valid and readable." },
+        "blocker": {
+          "title": "A settings file does not parse",
+          "found": "A settings file exists but is not valid JSON, so nothing declared inside it is in force.",
+          "cost": "This is the quietest failure in the list. The file is there, it looks configured, and every hook and every permission rule inside it is inert. Most harnesses report this softly or not at all.",
+          "fix": "Fix the syntax, then re-run this audit. A settings file that does not parse should be treated as a settings file that does not exist."
+        }
+      }
+    },
+    "H10": {
+      "title": "Lifecycle coverage",
+      "variants": {
+        "ok": { "title": "All four lifecycle points wired", "found": "Something is declared at session start, before a tool runs, after a tool runs, and at session end." },
+        "note": {
+          "title": "Some lifecycle points are unwired",
+          "found": "Hooks are declared, but not at every point in the session lifecycle.",
+          "cost": "Each unwired point is a moment you have no visibility into. Session start is where you set the frame. Before-tool is where you refuse. After-tool is where you record. Session end is where you find out how it went.",
+          "fix": "Decide which of the four you actually want, then wire those. An unwired point you chose is fine. An unwired point you assumed was covered is not."
+        },
+        "gap": {
+          "title": "No lifecycle hooks declared",
+          "found": "No hook is declared at any point in the session lifecycle.",
+          "cost": "The agent runs with nothing watching it. Anything it does wrong, you find out about later, by noticing, in the artifact.",
+          "fix": "Start with one after-tool hook that appends a line to a log. It costs nothing, it cannot break a session, and it turns the next surprise into something you can read."
+        }
+      }
+    },
+    "H11": {
+      "title": "Declared hooks point at files that exist",
+      "variants": {
+        "ok": { "title": "Every hook target resolves", "found": "Each hook command that names a script was matched to a file on disk." },
+        "blocker": {
+          "title": "A hook points at a file that is not there",
+          "found": "A hook is declared, and the script it calls does not exist at the path it names.",
+          "cost": "This is the gap between authored and installed. The hook is in the settings file, so it reads as configured. It cannot run. If it was your guardrail, you have been running without it and the setup still looked correct.",
+          "fix": "Either restore the missing script or delete the declaration. Leaving it is worse than both: it is a guardrail that shows up in a review and does nothing in a session."
+        },
+        "unknown": {
+          "title": "No hook target could be checked",
+          "found": "Hooks are declared, but none of them named a script file this check could resolve to a path.",
+          "cost": "Whether those hooks work is untested by this audit. Inline commands are fine, and this is not a finding against them. It is a statement that the strongest check here did not apply.",
+          "fix": "Nothing to fix. Use the evidence check below instead: whatever the hook does, does it leave a trace?"
+        }
+      }
+    },
+    "H12": {
+      "title": "Hook paths that depend on a variable",
+      "variants": {
+        "unknown": {
+          "title": "A hook path depends on a variable being set",
+          "found": "One or more hook commands build a path out of a variable, so the audit cannot confirm the target exists.",
+          "cost": "If that variable is empty when the harness runs the hook, the path collapses to something wrong and the hook fails without saying so. This is common in unattended runs, where the environment is thinner than the one you tested in.",
+          "fix": "Write the path out in full, or have the hook check its own inputs and fail loudly. Then run it the way it will actually be run, not just from a terminal you are sitting in front of."
+        }
+      }
+    },
+    "H13": {
+      "title": "Hook timeouts",
+      "variants": {
+        "note": {
+          "title": "Hooks without a declared timeout",
+          "found": "One or more hooks run with no time limit declared.",
+          "cost": "A hook that hangs takes the session with it. The failure looks like the agent being slow, which is the hardest kind of failure to attribute.",
+          "fix": "Give each hook a bound you are willing to wait for. Any number is better than no number, because no number is an unbounded promise you did not mean to make."
+        }
+      }
+    },
+    "H20": {
+      "title": "Evidence that hooks actually run",
+      "variants": {
+        "ok": { "title": "Hooks leave a trace", "found": "At least one artifact was found that the wiring can produce." },
+        "gap": {
+          "title": "Nothing your hooks produce could be found",
+          "found": "Hooks are declared, and no artifact was found that any of them would have written.",
+          "cost": "This is the finding worth the whole audit. A hook that is declared, whose script exists, and that has never left a trace is indistinguishable from a hook that never runs. You cannot tell those two apart by reading the config, and reading the config is what everybody does.",
+          "fix": "Have at least one hook append a line every time it fires: when, which one, what it saw. Then absence becomes a signal instead of a silence."
+        },
+        "unknown": {
+          "title": "Nothing declared, so nothing to look for",
+          "found": "No hooks are declared, so there is no expected artifact whose absence would mean anything.",
+          "cost": "Not a defect on its own. It does mean the evidence question is unanswerable here.",
+          "fix": "Covered by the lifecycle finding above."
+        }
+      }
+    },
+    "H21": {
+      "title": "Evidence freshness",
+      "variants": {
+        "ok": { "title": "Recent evidence found", "found": "At least one artifact was written inside the freshness window." },
+        "gap": {
+          "title": "Every trace is old",
+          "found": "Artifacts exist, and all of them are older than the freshness window.",
+          "cost": "Something worked once and has stopped, or the window is set tighter than how often you actually run. Both are worth knowing, and only one of them is a problem. The setup cannot tell you which, and neither can this audit.",
+          "fix": "Check whether the newest artifact matches your last real session. If it does not, the wiring broke at some point and nothing told you."
+        }
+      }
+    },
+    "H30": {
+      "title": "Refusal rules",
+      "variants": {
+        "ok": { "title": "Refusal rules present", "found": "The permission model includes rules that deny." },
+        "gap": {
+          "title": "Nothing is denied",
+          "found": "A permission model exists and contains no deny rules.",
+          "cost": "Permission to act is granted and never withheld. The set of things the agent will not do is empty, so the only limit is what it happens to choose.",
+          "fix": "Deny is the cheap half of a permission model. Name the handful of things that should never happen unattended and write those first. You will not think of everything, and the few you do think of are the expensive ones."
+        },
+        "unknown": {
+          "title": "No permission model found",
+          "found": "No permission block was found in any settings file this audit could read.",
+          "cost": "Whether limits exist is not knowable from here. They may live somewhere this audit does not look.",
+          "fix": "If your harness holds permissions elsewhere, add that file to harness-profiles.json so this check can reach it."
+        }
+      }
+    },
+    "H31": {
+      "title": "Blanket permissions",
+      "variants": {
+        "ok": { "title": "No blanket allow rules", "found": "No allow rule grants everything." },
+        "blocker": {
+          "title": "A rule allows everything",
+          "found": "At least one allow rule is a wildcard, which grants the whole class it sits in.",
+          "cost": "Every other rule in the file is now decoration. A wildcard usually arrives during debugging and stays, because nothing ever fails again after it lands, which is exactly what it feels like when it is working.",
+          "fix": "Replace it with the specific set you meant. If you cannot enumerate that set, that is the finding: the thing you allowed is larger than the thing you wanted."
+        }
+      }
+    },
+    "H32": {
+      "title": "Secret-shaped files",
+      "variants": {
+        "ok": { "title": "No exposed secret-shaped files", "found": "Either none were found, or each one matched an ignore rule." },
+        "blocker": {
+          "title": "A secret-shaped file is not ignored",
+          "found": "A file whose name matches a credential pattern sits inside a version-controlled tree with no matching ignore rule.",
+          "cost": "Two exposures, and the second one is newer. It can be committed, and it can be read by an agent that summarises your project into a context window you do not fully control.",
+          "fix": "Add the ignore rule first, then check whether it was already committed, because adding the rule afterwards does not remove it from history. This audit never opened the file and cannot tell you what is inside it."
+        },
+        "note": {
+          "title": "Secret-shaped files present, no version control",
+          "found": "Files matching credential patterns were found, and this directory is not a git working tree.",
+          "cost": "The commit risk does not apply here. The read risk does: anything in the tree is reachable by an agent working in it.",
+          "fix": "Keep credentials outside the directory the agent works in, or deny reads against them in the permission model."
+        }
+      }
+    },
+    "H34": {
+      "title": "Names that mention credentials",
+      "variants": {
+        "note": {
+          "title": "Files whose names mention credentials",
+          "found": "Files were found whose names contain a credential word without matching a credential shape, and no ignore rule covers them.",
+          "cost": "Most of these are harmless: a workflow, a test result, a config schema. They are listed separately from the broken finding above precisely so that one stays worth reading.",
+          "fix": "Glance at the list once. If any of them holds a real value, move it out of the working tree and ignore it. If none does, nothing needs doing."
+        }
+      }
+    },
+    "H33": {
+      "title": "Confirmation rules",
+      "variants": {
+        "note": {
+          "title": "Nothing is set to ask first",
+          "found": "The permission model has no rules that pause for confirmation.",
+          "cost": "Every action is either allowed outright or refused outright. The middle category, the one where you would want to look before it happens, is not represented.",
+          "fix": "Ask is the right setting for anything hard to reverse but legitimate. It costs one keystroke and it is the difference between noticing and finding out."
+        }
+      }
+    },
+    "H40": {
+      "title": "Completion signal",
+      "variants": {
+        "ok": { "title": "Session end is wired", "found": "Something runs when a session ends." },
+        "gap": {
+          "title": "Nothing runs at session end",
+          "found": "No hook is declared at the end of a session.",
+          "cost": "There is no completion signal. Finished, stalled, and crashed all look the same from outside, so you find out by checking, which means you find out when you remember to.",
+          "fix": "Have the end of a session write one small file: when it ended, and what it did. The value is not the file. It is that the absence of the file now means something."
+        }
+      }
+    },
+    "H41": {
+      "title": "Signal directory",
+      "variants": {
+        "ok": { "title": "A signal directory exists", "found": "A directory that could hold completion markers was found." },
+        "note": {
+          "title": "No signal directory",
+          "found": "No conventional location for completion markers was found.",
+          "cost": "Not a defect. It matters once you run work unattended, because a completion marker is only worth something if it lands somewhere you look without being asked.",
+          "fix": "Pick one directory and use it. The useful version of this convention has the worker write its marker somewhere it cannot otherwise reach, so finished is confirmed from outside instead of claimed from inside."
+        }
+      }
+    },
+    "H42": {
+      "title": "Run log",
+      "variants": {
+        "ok": { "title": "A run log exists", "found": "At least one log-shaped artifact was found." },
+        "gap": {
+          "title": "No run log",
+          "found": "No log-shaped artifact was found anywhere this audit looked.",
+          "cost": "When something goes wrong you will reconstruct it from memory and from the artifact it left behind. That reconstruction is a guess, and it is the reason the same failure happens twice.",
+          "fix": "One append-only file. Timestamp, what fired, what it saw. It is the cheapest thing in this list and it is the one you will reach for first."
+        }
+      }
+    },
+    "H50": {
+      "title": "Instruction file size",
+      "variants": {
+        "note": {
+          "title": "The instruction file is large",
+          "found": "An always-loaded instruction file is bigger than the budget set in the profile.",
+          "cost": "It is read on every turn of every session, so its size is a standing charge on all of them. Past a point, adding to it makes the whole file less likely to be followed, not more.",
+          "fix": "Split it. Keep a short index that is always loaded and move the detail into files that get read when they are relevant. The test is whether each line earns its place in every session, not whether it is true."
+        }
+      }
+    },
+    "H51": {
+      "title": "Pointers in the instruction file",
+      "variants": {
+        "ok": { "title": "Pointers resolve", "found": "Every relative path referenced in the instruction file was found on disk." },
+        "gap": {
+          "title": "The instruction file points at things that are not there",
+          "found": "One or more paths named in an always-loaded instruction file do not exist.",
+          "cost": "The agent is being told to consult something that is gone. Instructions rot faster than code because nothing fails when they do, so the file keeps reading as authoritative long after parts of it stopped being true.",
+          "fix": "Fix or cut each one. Then re-run this check after any move or rename, because it is the only thing that will notice."
+        },
+        "unknown": {
+          "title": "No pointers to check",
+          "found": "No relative path references were found in the instruction files, so nothing could be verified.",
+          "cost": "Nothing. Stated so a clean result is not read as a check that ran and passed.",
+          "fix": "Nothing to fix."
+        }
+      }
+    },
+    "H52": {
+      "title": "Competing instruction files",
+      "variants": {
+        "note": {
+          "title": "More than one instruction file",
+          "found": "The project holds more than one always-loaded instruction file.",
+          "cost": "Where they agree, nothing happens. Where they disagree, which one wins depends on load order, and load order is not something you set deliberately.",
+          "fix": "Name the precedence inside the files themselves, or fold them into one. The failure mode is not conflict, it is confident behaviour from the file you were not thinking about."
+        }
+      }
+    },
+    "H60": {
+      "title": "Capability inventory",
+      "variants": {
+        "ok": { "title": "Capabilities found", "found": "Agents, skills, commands, and hook scripts were counted." },
+        "note": {
+          "title": "No capabilities found",
+          "found": "No agent, skill, command, or hook-script directory held anything.",
+          "cost": "Nothing on its own. It does mean everything the agent does comes from the instruction file and the prompt.",
+          "fix": "Nothing to fix. This is a count, not a target."
+        }
+      }
+    },
+    "H61": {
+      "title": "Capability usage",
+      "variants": {
+        "ok": { "title": "Usage is recorded", "found": "A usage log was found, so which capabilities fire is measurable." },
+        "unknown": {
+          "title": "No record of which capabilities fire",
+          "found": "Capabilities exist and nothing records when they are used.",
+          "cost": "Which ones do the work, which ones overlap, and which ones have not fired since the month you wrote them are all unanswerable. The library grows and its quality is judged by memory.",
+          "fix": "Log the name and the timestamp on every fire. One line per event turns an argument about which capabilities matter into a table."
+        }
+      }
+    }
+  },
+
+  "routes": {
+    "_about": "OPTIONAL. Map a finding id to the place you would send a reader who wants to close it. Left empty on purpose: an empty route prints nothing, and a route pointing somewhere that does not help is worse than no route at all."
+  }
+}
