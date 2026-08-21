@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-look="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>FERRULE release manifests</title>
+<style>
+/* FERRULE v2, CRIMP MARK. Self-contained: no fetched fonts, no images,
+   no external stylesheet. Token source of truth: tokens-v2.css. */
+:root{
+  --ink-950:#090a09; --ink-900:#0c0e0d; --ink-850:#101211; --ink-800:#141716;
+  --ink-750:#191c1b; --ink-700:#1e2221; --ink-650:#252a28;
+  --line:#212624; --line-2:#2c3230; --line-3:#3a413e;
+  --metal-900:#1c201f; --metal-700:#363c3a; --metal-500:#666e6a;
+  --metal-300:#9ba39c; --metal-100:#c6ccc4; --metal-spec:#e4e8df;
+  --gauge:#7fa3b4; --gauge-mid:#6b8d9d; --gauge-lo:#4e6875; --gauge-dim:#35474f;
+  --gauge-wash:rgba(127,163,180,.10); --gauge-glow:rgba(127,163,180,.26);
+  --pass:#47a97c; --pass-hi:#71c79b; --pass-glow:rgba(71,169,124,.30);
+  --type-hi:#e7e9e3; --type:#c4c9c2; --type-2:#8f958e; --type-3:#616763; --type-4:#3d433f;
+  --face-mono:Consolas,"Cascadia Mono","Cascadia Code","SFMono-Regular","SF Mono",Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace;
+  --face-din:Bahnschrift,"DIN Alternate","DIN Condensed","Avenir Next Condensed","HelveticaNeue-CondensedBold","Liberation Sans Narrow","DejaVu Sans Condensed","Segoe UI",system-ui,sans-serif;
+  --face-text:Bahnschrift,"Segoe UI Variable Text","Segoe UI","Helvetica Neue","Liberation Sans",system-ui,sans-serif;
+  --f-micro:clamp(10px,.62rem + .10vw,12px);
+  --f-fine:clamp(12px,.74rem + .18vw,14px);
+  --f-body:clamp(15px,.90rem + .22vw,17px);
+  --f-lead:clamp(17px,1.00rem + .40vw,21px);
+  --f-sub:clamp(21px,1.10rem + .90vw,30px);
+  --s-1:6px; --s-2:12px; --s-3:20px; --s-4:32px; --s-5:52px; --s-6:84px;
+  --edge:2px; --hair:1px;
+  --tex-c:214,224,214; --knurl-pitch:4px; --knurl-alpha:.028;
+  --edge-hi:rgba(255,255,255,.055); --edge-lo:rgba(0,0,0,.55); --sink:rgba(0,0,0,.46);
+  --glow-c:168,196,176;
+  --ease:cubic-bezier(.22,.68,.24,1); --ease-out:cubic-bezier(.16,1,.30,1);
+  --dur-1:140ms; --dur-2:240ms; --dur-3:420ms;
+}
+/* Dark is the standard. Light is opt-in and never auto-switches:
+   set data-look="light" on <html>. */
+[data-look="light"]{
+  color-scheme:light;
+  --ink-950:#e9e7e0; --ink-900:#efede6; --ink-850:#f3f1ea; --ink-800:#f7f5ef;
+  --ink-750:#efede5; --ink-700:#e3e0d7; --ink-650:#d7d3c8;
+  --line:#d5d1c6; --line-2:#c2bdb0; --line-3:#a8a296;
+  --metal-900:#b9beb4; --metal-700:#9aa096; --metal-500:#787f76;
+  --metal-300:#5b625a; --metal-100:#444b44; --metal-spec:#333a34;
+  --gauge:#3d6070; --gauge-mid:#4f7182; --gauge-lo:#7996a4; --gauge-dim:#a9bec7;
+  --gauge-wash:rgba(61,96,112,.08); --gauge-glow:rgba(61,96,112,.14);
+  --pass:#1e7150; --pass-hi:#14563c; --pass-glow:rgba(30,113,80,.14);
+  --type-hi:#191a17; --type:#33352f; --type-2:#5c5f57; --type-3:#83867c; --type-4:#adb0a4;
+  --tex-c:40,44,40; --knurl-alpha:.030;
+  --edge-hi:rgba(255,255,255,.90); --edge-lo:rgba(0,0,0,.10); --sink:rgba(0,0,0,.10);
+  --glow-c:61,96,112;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background-color:var(--ink-950)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(58% 42% at 50% 12%, rgba(var(--glow-c),.048) 0%, rgba(var(--glow-c),.018) 44%, rgba(0,0,0,0) 76%),
+    radial-gradient(130% 100% at 50% 22%, var(--ink-850) 0%, var(--ink-900) 54%, var(--ink-950) 100%);
+  background-color:var(--ink-950);
+  color:var(--type);
+  font-family:var(--face-mono);
+  font-size:var(--f-body);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; align-items:center;
+  padding:var(--s-6) var(--s-3) var(--s-5);
+}
+
+.lockup{display:flex;align-items:center;gap:var(--s-2);width:100%;max-width:700px;margin:0 0 var(--s-5)}
+.band{flex:1 1 auto;height:3px;border-radius:2px;
+  background:linear-gradient(to right,rgba(155,163,156,0) 0%,var(--metal-900) 8%,var(--metal-500) 30%,var(--metal-spec) 50%,var(--metal-500) 70%,var(--metal-900) 92%,rgba(155,163,156,0) 100%);
+  box-shadow:0 1px 0 var(--edge-lo)}
+.cap{flex:none;width:3px;height:14px;border-radius:2px;background:linear-gradient(to bottom,var(--metal-300),var(--metal-900))}
+.wordmark{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-fine);letter-spacing:.42em;text-indent:.42em;color:var(--metal-100);
+  text-shadow:0 1px 0 var(--sink)}
+
+.masthead{width:100%;max-width:700px;margin-bottom:var(--s-4)}
+h1{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-sub);line-height:1.1;letter-spacing:.045em;text-indent:.045em;
+  text-transform:uppercase;color:var(--type-hi);margin:0}
+.lede{margin:var(--s-3) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-body);line-height:1.62;color:var(--type-2);max-width:64ch}
+
+.plate{position:relative;width:100%;max-width:700px;background:var(--ink-800);
+  border:var(--hair) solid var(--line);border-radius:var(--edge);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 1px 0 var(--edge-lo),0 20px 52px var(--sink)}
+.plate::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch)),
+    repeating-linear-gradient(-45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch))}
+
+.head{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4) 0}
+.kicker{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.30em;text-indent:.30em;text-transform:uppercase;color:var(--gauge-mid)}
+.tick{flex:1 1 auto;height:5px;
+  background-image:
+    linear-gradient(to bottom,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px),
+    repeating-linear-gradient(to right,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) 8px);
+  background-size:100% 1px,100% 5px;background-repeat:no-repeat,repeat-x;background-position:0 0,0 0}
+
+/* ---------------- the ledger ---------------- */
+.ledger{list-style:none;margin:0;padding:var(--s-3) var(--s-3) var(--s-3) var(--s-4);position:relative;z-index:1}
+.ledger li + li{margin-top:var(--s-1)}
+
+.entry{display:flex;align-items:baseline;gap:var(--s-3);position:relative;
+  padding:var(--s-2) var(--s-3) var(--s-2) var(--s-3);
+  text-decoration:none;color:inherit;border-radius:var(--edge);
+  background:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 66%);
+  transition:background var(--dur-1) var(--ease)}
+.entry::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:1px;
+  background-color:var(--gauge);
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,
+    rgba(0,0,0,.70) 25%,rgba(0,0,0,.70) 29%,
+    rgba(0,0,0,0) 29%,rgba(0,0,0,0) 71%,
+    rgba(0,0,0,.70) 71%,rgba(0,0,0,.70) 75%,
+    rgba(0,0,0,0) 75%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 0 1px var(--edge-lo),0 0 0 rgba(0,0,0,0);
+  transform-origin:50% 50%;
+  transition:box-shadow var(--dur-1) var(--ease),background-color var(--dur-1) var(--ease);
+  animation:crimp var(--dur-2) var(--ease) backwards}
+.entry:hover,.entry:focus-visible{background:linear-gradient(to right,var(--gauge-wash) 0%,rgba(0,0,0,0) 66%)}
+.entry:hover::before,.entry:focus-visible::before{background-color:var(--pass);box-shadow:0 0 0 1px var(--edge-lo),0 0 10px var(--pass-glow)}
+.entry:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
+
+.ord{flex:none;font-family:var(--face-mono);font-size:var(--f-micro);color:var(--gauge-mid);width:2.4em}
+.col{flex:1 1 auto;min-width:0}
+.name{font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-lead);line-height:1.24;letter-spacing:.02em;color:var(--type);
+  transition:color var(--dur-1) var(--ease)}
+.entry:hover .name,.entry:focus-visible .name{color:var(--type-hi)}
+.file{display:block;font-family:var(--face-mono);font-size:var(--f-micro);
+  color:var(--type-2);margin-top:3px;overflow-wrap:anywhere}
+.count{flex:none;font-family:var(--face-mono);font-size:var(--f-fine);color:var(--gauge);
+  text-align:right;white-space:nowrap}
+.count small{display:block;font-size:var(--f-micro);color:var(--type-2);letter-spacing:.06em}
+
+.foot{width:100%;max-width:700px;margin-top:var(--s-4);display:flex;gap:var(--s-3);align-items:flex-start}
+.foot .rule{flex:none;width:26px;height:1px;margin-top:.72em;background:var(--line-3)}
+.foot p{margin:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:60ch}
+
+@keyframes crimp{from{transform:scaleY(0);opacity:0}}
+@keyframes lift{from{opacity:0;transform:translateY(8px)}}
+.lockup{animation:lift var(--dur-3) var(--ease-out) backwards}
+.masthead{animation:lift var(--dur-3) var(--ease-out) 60ms backwards}
+.plate{animation:lift var(--dur-3) var(--ease-out) 120ms backwards}
+.foot{animation:lift var(--dur-3) var(--ease-out) 190ms backwards}
+.ledger li:nth-child(1) .entry::before{animation-delay:200ms}
+.ledger li:nth-child(2) .entry::before{animation-delay:255ms}
+.ledger li:nth-child(3) .entry::before{animation-delay:310ms}
+
+@media (prefers-reduced-motion:reduce){
+  .lockup,.masthead,.plate,.foot,.entry,.entry::before{animation:none !important;transition:none !important}
+}
+@media (max-width:520px){
+  body{padding:var(--s-5) var(--s-2) var(--s-4)}
+  .head{padding:var(--s-2) var(--s-3) 0}
+  .ledger{padding:var(--s-2) var(--s-2) var(--s-2) var(--s-3)}
+  .entry{flex-wrap:wrap;gap:var(--s-1) var(--s-2)}
+  .ord{width:auto}
+  .count{width:100%;text-align:left}
+  .count small{display:inline;margin-left:.6em}
+}
+</style>
+</head>
+<body>
+
+<header class="lockup">
+  <span class="cap"></span>
+  <span class="band"></span>
+  <span class="wordmark">FERRULE</span>
+  <span class="band"></span>
+  <span class="cap"></span>
+</header>
+
+<div class="masthead">
+  <h1>Release manifests</h1>
+  <p class="lede">The complete file list for each FERRULE release, with sizes and checksums, published before purchase. Each release verifies its own delivery against a shipped checksum manifest before anything runs.</p>
+</div>
+
+<main class="plate">
+  <div class="head">
+    <span class="kicker">Published before purchase</span>
+    <span class="tick"></span>
+  </div>
+
+  <ul class="ledger">
+    <li>
+      <a class="entry" href="ferrule-harness-audit-1.0.0.MANIFEST.txt">
+        <span class="ord">01</span>
+        <span class="col">
+          <span class="name">The FERRULE Harness Audit, Release 1.0</span>
+          <span class="file">ferrule-harness-audit-1.0.0.MANIFEST.txt</span>
+        </span>
+        <span class="count">6 files</span>
+      </a>
+    </li>
+    <li>
+      <a class="entry" href="ferrule-kit-1.0.2.MANIFEST.txt">
+        <span class="ord">02</span>
+        <span class="col">
+          <span class="name">The FERRULE Kit, Release 1.0</span>
+          <span class="file">ferrule-kit-1.0.2.MANIFEST.txt</span>
+        </span>
+        <span class="count">32 files</span>
+      </a>
+    </li>
+    <li>
+      <a class="entry" href="ferrule-proof-set-1.0.4.MANIFEST.txt">
+        <span class="ord">03</span>
+        <span class="col">
+          <span class="name">The FERRULE Proof Set, Release 1.0</span>
+          <span class="file">ferrule-proof-set-1.0.4.MANIFEST.txt</span>
+        </span>
+        <span class="count">83 files<small>81 listed</small></span>
+      </a>
+    </li>
+  </ul>
+</main>
+
+<footer class="foot">
+  <span class="rule"></span>
+  <p>Every line is checkable against your own download.</p>
+</footer>
+
+</body>
+</html>
