@@ -1,0 +1,343 @@
+ferrule-proof-set-1.1.0 - what is in the download
+
+The exact file list, published before purchase. Every line is checkable against your own download.
+
+All 106 files are listed below with a sha256 you can compute yourself.
+
+Three things the two manifests INSIDE the download deliberately leave out. Each is a rule
+rather than an oversight, and none of them applies to this list:
+
+  1. harness/delivery.json carries a hash for every shipped file except itself. Nothing
+     carries its own hash.
+  2. FILE-MANIFEST.md leaves two files off its size table: itself, because writing its own
+     size would change it, and delivery.json. So its headline count and its size sum each
+     name the set they are true of rather than sharing one number that fits neither.
+  3. harness/fence.denylist.json ships empty and the release asks you to fill
+     it in, so delivery.json does not carry its hash either. Requiring a file you are told
+     to edit to match the bytes that shipped would mean that following the instructions
+     breaks the integrity check, and that check runs before everything else, so the
+     correct install would be the unverifiable one.
+
+THIS list hashes every entry in the archive, including all three of the above. It is the
+record kept outside the download, so it has no reason to leave anything out, and the two
+inside can be checked against it.
+
+AGENT-INSTRUCTIONS.md  (13,401 bytes)
+sha256 608511c44aaab82a0332a3beb6eeafd5da7ab89339762dbe207cb300ad63edd7
+
+BOUNDARY.md  (12,025 bytes)
+sha256 2b8298427ea8e3e66e8948621637680aab21a2861aff0f09362f79ae61281c87
+
+components/agent-work-contract/BUILD.md  (10,818 bytes)
+sha256 87a6a6bc7cb2fe3bf8c465523715ab14dc1cdd1c9ccb1ef0258347fde0042bac
+
+components/agent-work-contract/checks/agent-work-contract.check.mjs  (28,005 bytes)
+sha256 01c19beb757d04e79d826ffc1e96eaeed65c15b540872705597a8db85a1431cc
+
+components/agent-work-contract/CONTRACT.worksheet.md  (4,828 bytes)
+sha256 25c73cb166518200b2b5c4ee19353509c58d470ba9baa9ea34f88b7af666827c
+
+components/agent-work-contract/templates/contract-check.mjs  (18,827 bytes)
+sha256 4c7f2273b316944ebd631e3bfc39a1975f6859152b16bca767e78800b2b28a6c
+
+components/agent-work-contract/work-contract.example.json  (2,605 bytes)
+sha256 dc67bc3c0024fa01d2f044fa379ce33a21d8ff1e4fe8d317a4c423ec1e3404bd
+
+components/capability-authoring/BUILD.md  (4,999 bytes)
+sha256 b205776a38b73d9562ef57c564de9b1b675bc22e7c79ccf32ee0c300e6ea0826
+
+components/capability-authoring/checks/capability-authoring.check.mjs  (16,564 bytes)
+sha256 e927bdae42c9f88c3d27fe76e3f2747dffb0a2f63e4d234449c9e832ba4c9d2f
+
+components/capability-authoring/LIBRARY-AUDIT.md  (4,204 bytes)
+sha256 afe140f6890c35131186bc91ce5f6e5bfd5a5f7662603a803d7621fbed29e83c
+
+components/capability-authoring/templates/capability.template.md  (3,192 bytes)
+sha256 c14dadf38f4558d38f0f393c7195ffa755a39e91c4e41005ebf4c82547d9f7d6
+
+components/capability-authoring/templates/eval-run.mjs  (9,455 bytes)
+sha256 7513176b9ea85dd140b5eaaba48074ed615e8ce6e9aaf6d00e60af928589cb93
+
+components/capability-authoring/templates/eval-set.example.json  (3,333 bytes)
+sha256 72872b7af59333cb12425448c49d5762b1b026ceefd19c78f7b4b1ab8d03937a
+
+components/capability-authoring/templates/eval-set.schema.json  (2,452 bytes)
+sha256 9ee19dc9b5b1fee4d0def133495957bc204257c34bc89094bac3d2fe4ddc4c7c
+
+components/capability-authoring/templates/library-audit.mjs  (7,603 bytes)
+sha256 b4ac7bd2d96272afbfcaae3fbab5c68d7ec5bd72c5f9b75f24960203780bd78a
+
+components/capability-authoring/templates/subagent.template.md  (3,890 bytes)
+sha256 e0ef94e92a504838cb76414fe50f139190f7423cf1b7b9d38dcecfd77e02e790
+
+components/capability-authoring/templates/telemetry.mjs  (3,519 bytes)
+sha256 00c1cbb96627fe29a1ecd5621c389394773442eb96161dbc7cda298edef4e456
+
+components/claim-compiler/BUILD.md  (9,635 bytes)
+sha256 e0e91b6cf73522386ced6bdf2bfea241690f9785217c897c7e095b585a677aa2
+
+components/claim-compiler/checks/claim-compiler.check.mjs  (35,455 bytes)
+sha256 0a2b5b36ac5bcef197567d4238c96964ddb161f51101dae5fe1d9bba6320cc8c
+
+components/claim-compiler/claims.example.json  (3,060 bytes)
+sha256 4d25eba2a2815bcce4c0087fae47d34017359ae43c5dbaa4dcf36dd30ba7e135
+
+components/claim-compiler/templates/compile-claims.mjs  (26,634 bytes)
+sha256 ef680ddfbf0aa05c3b12f869f00bdbb4536c79c38465e8ec6fb175ca363bbe27
+
+components/completion-signal/BUILD.md  (11,818 bytes)
+sha256 b10ccd8c6309a0e859634592aa0d57d96add28059d7a0fc6a2f47e8063796bfe
+
+components/completion-signal/checks/completion-signal.check.mjs  (30,264 bytes)
+sha256 ef85d070edf10546ad16b0cadd05d7863631075cb554ed864b98d5bca665a76d
+
+components/completion-signal/completion-signal.worksheet.json  (877 bytes)
+sha256 e4cb92ca2aa386797a51b9608f53a47a5bcf0f36f73aecdf3fe365bc0ecb6165
+
+components/completion-signal/templates/jail-check.mjs  (13,835 bytes)
+sha256 074a2b41b652743dda1f26ae44c80be60a466572bf7ada7c12fa25a93071e5bf
+
+components/deadend-linter/BUILD.md  (9,038 bytes)
+sha256 043515e5bcad211af5932d6abdba87bf7653bf139b66127fcc28c734aeca3597
+
+components/deadend-linter/checks/deadend-linter.check.mjs  (25,205 bytes)
+sha256 201dda3654a1587ebd30513e6ee9ecd20d3763f2109b3acf37f88a109f361888
+
+components/deadend-linter/lane-graph.example.json  (2,883 bytes)
+sha256 589ff0d944528a51d5a8886634475740d8ff64f2fadde15c8e571ba104f3d7c7
+
+components/deadend-linter/templates/lint-graph.mjs  (14,486 bytes)
+sha256 7b36c262538e6a3e10cae0707020d4e8d796ea176fe36ddb6d878464786a14d0
+
+components/dryrun-lab/BUILD.md  (16,943 bytes)
+sha256 56c11ee77003ed2062c4d0b712afc944e791524d710f9be9628a6d49bfcf8617
+
+components/dryrun-lab/checks/dryrun-lab.check.mjs  (70,062 bytes)
+sha256 5ec31573e9f97cad4d7862545aae3144b8a2d94229438abcaa5479c027ed2c6a
+
+components/dryrun-lab/dryrun-target.example.json  (4,384 bytes)
+sha256 10b0c6404a229e536f377408d28bd998eae221873f9ea34aba68228f8b3a3291
+
+components/dryrun-lab/templates/adversarial-inputs.mjs  (25,949 bytes)
+sha256 c2e6c7f386bde0d1812280b224191239c33b4d8d0084fcf74a69ef7e9644464b
+
+components/dryrun-lab/templates/dry-run.mjs  (21,967 bytes)
+sha256 880e33e69fb9d8037467488a1b48bc124c171da56ed293b819baf9a2ef21f627
+
+components/gate-carrier/BUILD.md  (15,002 bytes)
+sha256 16be388e4ac9505d229ea78b8526a61b8b67c0b3e448cf3c60fb990ca2d8fd58
+
+components/gate-carrier/checks/gate-carrier.check.mjs  (36,650 bytes)
+sha256 be23b45e08c830f7314583cde973a0147ef01a86c1a7585cf33178daf2d80326
+
+components/gate-carrier/denylist.worksheet.json  (2,680 bytes)
+sha256 435eaec9f1eea419627eff1a75d151cb640f113303c268d0ded0e19c88f26d44
+
+components/gate-carrier/templates/gate-selftest.mjs  (18,958 bytes)
+sha256 a8b48ddd58985eb5f47c3991f8d06a38d8cea0aadae00d69d5da8d50c260ba55
+
+components/gate-carrier/token-registry.worksheet.json  (2,488 bytes)
+sha256 012aa6a5a444cab901eef22c5d71fa56424e7ed3a39c3b50d441d2eac7246e38
+
+components/hostile-root/BUILD.md  (9,782 bytes)
+sha256 cc2b7188859d6bcf833bdb2ebcd150e5e260406df0e1bce75975537584607ffc
+
+components/hostile-root/checks/hostile-root.check.mjs  (23,665 bytes)
+sha256 f3dd180ba95afa5ab5b861b8926e162e7c8042c785ead9a846be9b97f5e4eba3
+
+components/hostile-root/file-operations.example.json  (463 bytes)
+sha256 359fb917fac76f7ca639eb4850f7c8fd3c80004f1936afba32ddcfd62dc7b1d3
+
+components/hostile-root/templates/operation-suite.mjs  (14,586 bytes)
+sha256 ab8a4cebe31700e91b634834bfc650735f331575fd93cd45026d40ba83eebff6
+
+components/hostile-root/templates/populate-root.mjs  (5,740 bytes)
+sha256 b4e8452e5c5c9e7aba6afb3635e8a9af039b79d2e41142a38426ae3a04184f65
+
+components/install-layer/baseline.example.json  (1,401 bytes)
+sha256 548c74a31619eaf978911d101a5ada803504043248ff727d3c3d5340418f405d
+
+components/install-layer/BUILD.md  (7,299 bytes)
+sha256 f9df1b20df403e3c56b9d8b697ed34747690ac160b3fad40f276430ad50f1271
+
+components/install-layer/checks/install-layer.check.mjs  (35,677 bytes)
+sha256 e1820181987d5b19124de3d4f7a08f9dc220bcbc246d3a0d5d22ee73cefa496a
+
+components/install-layer/collision-policy.example.json  (1,017 bytes)
+sha256 07e025781ba6d2ac315c284815a21d39037e6a87fa4d45949e421fabda966a91
+
+components/install-layer/drift-allowlist.example.json  (1,001 bytes)
+sha256 1f20e19f516894c966539140eb0c087b154db9f72d8951ba4c40b8eee172b873
+
+components/install-layer/package.example.json  (1,423 bytes)
+sha256 b04fbed84b21f0db8d71ee72e633758474bcbbb721187c3d93a987af8b0486b4
+
+components/install-layer/templates/certify.mjs  (6,987 bytes)
+sha256 27b3d994510c10f16e0029ce22e8648feccf537eb18aa6c1a071ec7849074d1d
+
+components/install-layer/templates/collisions.mjs  (4,372 bytes)
+sha256 9b79c7504e1983ca7126f523410303decc1e977ffca60cb1f6248557e1db4c3c
+
+components/install-layer/templates/drift.mjs  (9,742 bytes)
+sha256 657f716abc63af988eec8514cd8faf9225e6200901ee10eb40193e42548204cb
+
+components/install-layer/templates/input-fence.mjs  (7,133 bytes)
+sha256 9aa60913bf12c1658e8ac1b39fec287b901fe4cd6c995742a4c2c52a82759811
+
+components/install-layer/templates/install.mjs  (18,626 bytes)
+sha256 1a925a72de7f5b5f7369ce232dccbd933051baf338de8caec4761de97de20692
+
+components/install-layer/templates/permissions.mjs  (4,633 bytes)
+sha256 89b8869e85e27ffe02bf993631689315d13bcbe8deb095c6ad90c007df14646a
+
+components/lane-control/BUILD.md  (7,177 bytes)
+sha256 940b14d756bded24949c1aac22627999c2edaa07f358f84d12b60b3dd8354ef6
+
+components/lane-control/checks/lane-control.check.mjs  (19,240 bytes)
+sha256 ae429c8e41d0e5a4a2ca7708ab6110e7e855400f24446184e0f96deefa4497b0
+
+components/lane-control/DONE-DEFINITION.worksheet.md  (4,377 bytes)
+sha256 642e0cc3f775dc654d88f8cd8e729b10ee68ce87a33126f8d33022e9e83c4c99
+
+components/lane-control/templates/completion-signal.mjs  (8,030 bytes)
+sha256 55071b96da9276674b3f13d3cd76881b74a73288dc17c581ec3fab19351ff7d5
+
+components/lane-control/templates/contract-lint.mjs  (6,334 bytes)
+sha256 25b2b3666e59259caa03180dfa0a73383e5565e740ed5c625ad12e3162585ede
+
+components/lane-control/templates/KICKOFF.template.md  (2,841 bytes)
+sha256 20c052b4f6822797d95a3dfb130157639628095114a509f33ded0c23f751ca2a
+
+components/lane-control/templates/watchdog.mjs  (11,870 bytes)
+sha256 73bc1d178b972494e1bab06ea53319c594a06f35c11dc149dec0be0a7831024e
+
+components/lane-control/TRAPS.md  (5,078 bytes)
+sha256 cf50e4e4cd26c5ce5564f1b2d50c57359164159d5ad385f1d586e7fb8a54da35
+
+components/model-router/bindings.example.json  (537 bytes)
+sha256 da1a573366f3d4e87457a75e7d5d7d1a0c8975e0e9d725bd3865c0f5e74139d1
+
+components/model-router/BUILD.md  (9,219 bytes)
+sha256 bd0ec24f3a7a0ad82663fb490c85cdd0ad8efac7027add4f2fda412f3942da40
+
+components/model-router/checks/model-router.check.mjs  (22,961 bytes)
+sha256 cebcf4f9727c50ca17c4f72cf7b2718cc12775b9a14fa608780ec32b43582013
+
+components/model-router/templates/resolve-model.mjs  (11,778 bytes)
+sha256 d3f5c1bba1b60fc695a8305d95b2ad79b3ad982c6b9355994c5fb6cb5b4265c6
+
+components/runbook-compiler/BUILD.md  (10,022 bytes)
+sha256 51d21db45bbcf1359601c913a168f49962a6651509a8db0db8deb3a66f789d4f
+
+components/runbook-compiler/checks/runbook-compiler.check.mjs  (48,690 bytes)
+sha256 7991e2b165676bb097900c284e3475333a904139e9e8c78887ebf068f4deaf50
+
+components/runbook-compiler/templates/compile-runbook.mjs  (38,800 bytes)
+sha256 e54db1fd21acbc538dc6941ca8161f3bb68ace52b3b2b8232332609c083e0e52
+
+components/session-control/BUILD.md  (5,065 bytes)
+sha256 b9af0c1ae8ab5c0fa141b2c51625bbd362fa71e39d0318dbae27173cb5f56411
+
+components/session-control/checks/session-control.check.mjs  (42,118 bytes)
+sha256 be3091613a29a1f126e647345af962944a768b4f8efbcbcd41e00930d96dc513
+
+components/session-control/hooks.settings.example.json  (2,869 bytes)
+sha256 a79a61e59059ccaf81f5026a8f33e85c404f70806414f26d687453579bc44528
+
+components/session-control/scope.example.json  (1,092 bytes)
+sha256 b5763359457ad6d0dce84ea529430072a1ac67f7ad69e759b3c7592781f98751
+
+components/session-control/templates/config-snapshot.mjs  (6,324 bytes)
+sha256 f35caad18038f28cd634af4c0d65a723649e09829d7027982a3d2fb2ad9b4d8d
+
+components/session-control/templates/firing-selfcheck.mjs  (8,074 bytes)
+sha256 43dd7a8a3638b3e74a1655910ca329632d0798ca6eebc46ba05a16e7a417323e
+
+components/session-control/templates/hooks/slot.mjs  (7,149 bytes)
+sha256 af2963d5478821d91b54a3c4efb2c7236e5cc46382dc9538c05df477a1f09c5a
+
+components/session-control/templates/scope-gate.mjs  (9,638 bytes)
+sha256 80d2517d40b48e0806664ba79c6ab070059fc112c4434d305a60d0508a53831b
+
+components/session-control/templates/write-fence.mjs  (5,250 bytes)
+sha256 724e007ae8e9c7a5084a4945f7a2e6546078a2b1a06b4086787f478d7452ecd3
+
+components/session-control/TRAPS.md  (4,600 bytes)
+sha256 6a7e6dbea8dda60b273332977f45b8c714076b690d29586b144f9306047deeb1
+
+components/session-control/write-fence.patterns.example.json  (1,957 bytes)
+sha256 cec65d3e99afa08543659be71f31c327d5348f94d96ed555ad379db9573d1594
+
+components/transcript-auditor/BUILD.md  (9,250 bytes)
+sha256 e2f446f32656cd08a9df7b578b77cc06e9d4c9659280702304a03ea108c427b7
+
+components/transcript-auditor/checks/transcript-auditor.check.mjs  (31,093 bytes)
+sha256 f95ebaa204ed67504acb1a990124b8ae3282d1b8168ecac95ac6454c536709c5
+
+components/transcript-auditor/rubric.example.json  (4,151 bytes)
+sha256 ff8f748cea299c502468fbb0e64d3b3b1a316bb7a5139ee74565553340bb5283
+
+components/transcript-auditor/templates/audit-transcript.mjs  (26,380 bytes)
+sha256 1f2a8b6eb5ce97fb12ede98d914984966d66d23a412d8dd1374aadb7a8a10932
+
+examples/01-session-control/WALKTHROUGH.md  (5,224 bytes)
+sha256 74812e37995c31ce37983b46f88d227990c5efb9b227adba1936c8dc54b42e8a
+
+examples/02-unattended-lane/run-demo.mjs  (5,652 bytes)
+sha256 b767108e91a041ef7426fb38fa42bea5ef0cdf2b884660ac94e8ccddecc86180
+
+examples/02-unattended-lane/WALKTHROUGH.md  (5,444 bytes)
+sha256 d4aef4ac17acc5ea9e93cdbf41cb54a93c8e3aaca439738ae311847b1431b3b7
+
+FILE-MANIFEST.md  (8,459 bytes)
+sha256 3abf3f0c7774fb0776ffd221d40a06ccc4bfb64a627aa482252f7090188676d2
+
+harness/ack.example.json  (997 bytes)
+sha256 48ca42a5993a8bd9e06c61f5211d61d5c52247e844f800de8e29f70b87e04177
+
+harness/delivery.json  (19,472 bytes)
+sha256 851d3d9c5ffba1a82fd32453e5c7419b15d19f11b1280f0e31e5533a9e786e9c
+
+harness/fence.denylist.json  (2,131 bytes)
+sha256 ea31df555d324015c9d2dd319a27612a770880cccedda237dd9655cb4f3abf14
+
+harness/lib/ack.mjs  (13,442 bytes)
+sha256 549e745daea87dbcc4657e4536c4f1a1f4c25d11c42f56475d7d11e2173f22ba
+
+harness/lib/fence.mjs  (26,025 bytes)
+sha256 dd4f49b5bb0d3b1fdc4e68da17bd2b964f363ee33431d2a534be8be490d2dc3a
+
+harness/lib/integrity.mjs  (14,981 bytes)
+sha256 5a7399bcf6bb6cbbd2faef15403528ddf5b441d266378b46d1718ccb9ceb1704
+
+harness/lib/probe.mjs  (1,433 bytes)
+sha256 8f3046f1fb12c3533fe869b40f7efb028efa4ad25f15b0035ac576f190b5d0d4
+
+harness/lib/report.mjs  (45,372 bytes)
+sha256 402f5277d079f956a6c5708e512a025e0c2239103b8d933de0ede5dcd0fc9494
+
+harness/lib/strict.mjs  (12,292 bytes)
+sha256 a0632e2024c01886d180faec9429d32c6de121adcdedd0430fa6fe4233f967b3
+
+harness/lib/verdict-control.mjs  (49,463 bytes)
+sha256 b813613e477e942af1fec796ac0104aaf0a84c86fdfc29c3a3f510554d3c16c3
+
+harness/verify.mjs  (5,517 bytes)
+sha256 4bdbb2a2b0e3591952b45244485b6da986afec44c9406e202d2f2db7b4ca592f
+
+INSTALL-MANUAL.md  (10,008 bytes)
+sha256 032d6045a8739dfba483b043459f9d1f189395d08196bdff7f76a134b574345d
+
+manifest.json  (36,983 bytes)
+sha256 c245830ba017f5b6c3b70c033f1660df9a689bcc710e1d9550e14e6d5f75e74b
+
+OPERATING-CONVENTIONS.md  (5,867 bytes)
+sha256 d30ecdef106988760d3b9733a0f919be6dd606be3d7e574cba7beab7b2ef9811
+
+QUICK-RUN.md  (5,108 bytes)
+sha256 d84cbc5921ba24b9a8c188ff836d30d99559685333be09a34479f36feb0bb88b
+
+START-HERE.md  (9,786 bytes)
+sha256 9f31470042e5d35fa461fed9de73000bbb24ab30c7e98226e1b71886b2bc679a
+
+106 files. The download carries its own delivery manifest, which the harness checks on every run before anything else executes.
