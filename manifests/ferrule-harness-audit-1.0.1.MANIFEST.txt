@@ -1,0 +1,23 @@
+FERRULE Harness Audit 1.0.1 - what is in the download
+
+The exact file list, published before purchase. Every line is checkable against your own download.
+
+audit-copy.json  (31,979 bytes)
+sha256 6a27925faa2bde06b8701c6d30ab4a2ad4cbef55960cd4e56edadbb8bda7f873
+
+harness-audit.mjs  (40,365 bytes)
+sha256 c534155d62fad97bd7bc18ae76bf99f041c898537bb1806330d3556efd923a6a
+
+harness-profiles.json  (4,072 bytes)
+sha256 94f64f24b82deff4e02283f6f9eb1eec507a660d99238e385f382ef0c7fe4882
+
+README.md  (8,583 bytes)
+sha256 365f823519104b2a92243fc77826110d3aedbf7b1e0e9ce53131e69d9bf9f217
+
+REPORT-SHAPE.md  (7,730 bytes)
+sha256 0723e341fdd252f1032ef2fd659592c63783a08e488192b1607ed81e952b1a83
+
+selftest-fixture.json  (3,597 bytes)
+sha256 c35f355b372cbbd4586d2a70845ecc7eb567ad833a4c136ded744b6e9d360064
+
+6 files. MANIFEST.json ships beside them and carries the same table as data; it is not listed in itself because a file cannot hold its own hash.

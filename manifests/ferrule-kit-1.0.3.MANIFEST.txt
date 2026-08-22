@@ -1,0 +1,101 @@
+ferrule-kit-1.0.3 - what is in the download
+
+The exact file list, published before purchase. Every line is checkable against your own download.
+
+AGENT-INSTRUCTIONS.md  (6,192 bytes)
+sha256 47e8cf02d097b5116b528e1626867ea9823785ab1c8dddb9ab4b82bb2edb6345
+
+harness/ack.example.json  (1,102 bytes)
+sha256 f6234a3249d997013047a383b3b1808cc8bd6934f5387569a455829facd04484
+
+harness/fence-tokens.json  (3,318 bytes)
+sha256 18ac2161fdcb136c8e5b41479a5624372c874c4e2d19e2970620c1197bbcfe32
+
+harness/kit-integrity.json  (8,391 bytes)
+sha256 9d4fe70ada8350d6a792be1d00b00b9835fbe6978461db8cb5e9d0f762c0610a
+
+harness/lib/ack.mjs  (5,470 bytes)
+sha256 90ac3757261615edcbc47f9f13e034f6b174992fce3f90ab37baaaff711c667f
+
+harness/lib/fixture.mjs  (9,677 bytes)
+sha256 aa78fb30ff04b91fccf0b207d042a1f1a513e73b9db3a6fc0f5cc87b22f1a681
+
+harness/lib/integrity.mjs  (7,869 bytes)
+sha256 d80d8ece1b3b8b8c232ae45b5c2407672a9415de51d1e016e6ad874a89c4c2c9
+
+harness/lib/isolation.mjs  (25,972 bytes)
+sha256 8f40d8f16793cb61dad7f6cc6c5c7af368e849b43de3543990df029239530dec
+
+harness/lib/moat-fence.mjs  (10,925 bytes)
+sha256 cfdcf9b777432fd569cd68910a038fc9aeb2498eac24b65fca60003bb3ad6c5f
+
+harness/lib/probe.mjs  (1,749 bytes)
+sha256 6db3c607f47ae787a993351387f3005519bdccbe861f384c4de4f7699ceab685
+
+harness/lib/report.mjs  (14,325 bytes)
+sha256 f73a04dd06434cf7c8db03524843e3f483d5897b2a6fb01fd7050a804caea6ab
+
+harness/verify.mjs  (6,637 bytes)
+sha256 65a16868f56515f17c49ac689df03dd45328f55adb60156ad4eea480f2faa1d0
+
+INSTALL-MANUAL.md  (10,147 bytes)
+sha256 e19776fbcfb0cd8911da0744d78d9ef53a150379aebf62e642be1ba0b9bb4863
+
+manifest.json  (7,394 bytes)
+sha256 8ccd3e1810b416bc7b49d0aca20f508a2ee4c02ff104101d7f88a903e30c05b5
+
+MOAT-FENCE.md  (13,235 bytes)
+sha256 fe530284030ac2b66ea1db042e2612ee82e82f5222f4a8654059d957511568fd
+
+paths/capability/BUILD.md  (6,977 bytes)
+sha256 f3daa396bcc1017edc59f47c8d1b87d75662918697e197ba261245d81ddc827f
+
+paths/capability/checks/capability.check.mjs  (23,967 bytes)
+sha256 4cc815a8ecba163365887baf90fc46bd1ef99bc184f3a4e0afb45b7cb5635c7b
+
+paths/capability/templates/capability.example.json  (2,792 bytes)
+sha256 d0f6a163c79748b68d2f7814daadfe9e30b4b0895660a760b33edac08893e75f
+
+paths/capability/templates/capability.schema.json  (2,889 bytes)
+sha256 718ba72c2d8e2812577718740f2897c2fd8882b7500c6365563d8737465fa87e
+
+paths/capability/templates/grade.mjs  (7,588 bytes)
+sha256 919997f1cc9523fe19a14e04af233b0376116e0bee0d37b172a2f5725d1e6f8e
+
+paths/guardrail/BUILD.md  (7,195 bytes)
+sha256 657d5712ce887c4f0339d540ee9691c6c2ef4e3b701bbd2c9403752c70be9c3e
+
+paths/guardrail/checks/guardrail.check.mjs  (18,899 bytes)
+sha256 b9800573cddc6c5f69883d827a765a20217fef03af9170f25f2bcb16597f5003
+
+paths/guardrail/templates/gate.mjs  (12,110 bytes)
+sha256 1c5bed002ba2b28372281ac088210a3fe4af0ac2bf8b451358ff359a158514d9
+
+paths/guardrail/templates/scope.example.json  (2,761 bytes)
+sha256 e94fdd05d545c690eccff2b864bda7d8a2042919d683845f3baf3d74d0a5e4d7
+
+paths/guardrail/templates/scope.schema.json  (1,971 bytes)
+sha256 c1d99a47f5299fe5bfe00fb706cd4a3e4259c639fd9574c538a8f9d6a847bad4
+
+paths/lane/BUILD.md  (7,049 bytes)
+sha256 e413decf735046dae7c11f33db4ec06cca2d4120ce9c673e6cac3a43622f719c
+
+paths/lane/checks/lane.check.mjs  (16,310 bytes)
+sha256 d2ec6bfd2c6c2c0f2102a7f8b4b7c376610f80cbce79a4ef1e5014c0ff8a6749
+
+paths/lane/templates/lane.example.json  (2,328 bytes)
+sha256 1222e6add5fa03b733e228bfecd93d9b388e8e4622bd1565ed77a4f37f335528
+
+paths/lane/templates/lane.schema.json  (3,131 bytes)
+sha256 c7361446b9bf40a963db9eafc2f06a783e44cb8d01b4d160598556d8df2bf911
+
+paths/lane/templates/signal.mjs  (11,417 bytes)
+sha256 f08ec715520db8a2383862cce8cb9d252a67677344217f34628832891727b3e9
+
+QUICK-RUN.md  (3,312 bytes)
+sha256 02f49c8e4812396a382cf8fcccdca09a5310120c4096ff813a2e726a935901cb
+
+START-HERE.md  (6,470 bytes)
+sha256 df71f26e80c0be3496b7836598df025d8d2c45a539e6f7b98f4a28f9519781a2
+
+32 files. The download carries its own delivery manifest, which the harness checks on every run before anything else executes.
