@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
-<title>The FERRULE Proof Set, Release 1.0</title>
-<meta name="description" content="A component-by-component breakdown of the FERRULE Proof Set: nine components in two halves, five verdicts, the list of what is not in it, and the file list published before you buy.">
+<title>The FERRULE Proof Set, Release 1.1</title>
+<meta name="description" content="A component-by-component breakdown of the FERRULE Proof Set: fourteen components in three groups, five verdicts, the list of what is not in it, and the file list published before you buy.">
 <style>
 /* FERRULE v2, CRIMP MARK. Self-contained: no fetched fonts, no images,
    no external stylesheet. Token source of truth: tokens-v2.css.
@@ -274,13 +274,13 @@ a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
 </header>
 
 <div class="masthead">
-  <h1>The FERRULE Proof Set, Release 1.0</h1>
-  <p class="sub">Nine components, and the list of what nothing is watching</p>
+  <h1>The FERRULE Proof Set, Release 1.1</h1>
+  <p class="sub">Fourteen components, and the list of what nothing is watching</p>
   <p class="lede">Write down what a good run is supposed to change. This release turns each line into a check that can fail, then shows you which promises no process is watching yet.</p>
-  <p class="lede">You drop nine components into the harness you already use, plus a verification harness that fails loudly and points at the piece that did not land.</p>
+  <p class="lede">You drop fourteen components into the harness you already use, plus a verification harness that fails loudly and points at the piece that did not land.</p>
 </div>
 
-<!-- ================= THE NINE COMPONENTS ================= -->
+<!-- ================= THE FOURTEEN COMPONENTS ================= -->
 <main class="plate">
   <div class="head">
     <span class="kicker">What is in it</span>
@@ -288,8 +288,8 @@ a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
   </div>
 
   <div class="body">
-    <h3>Nine components, in two halves</h3>
-    <p>The first half is about getting a system installed and proving it landed. The second is about the work the installed system does, which is a different question and the one nobody usually has an instrument for.</p>
+    <h3>Fourteen components, in three groups</h3>
+    <p>The first is about getting a system installed and proving it landed. The second is about the work the installed system does, which is a different question and the one nobody usually has an instrument for. The third is about the moments around a run: what a run declares before it fires, what it resolves at the moment it fires, what stands between your work and the thing that leaves, and where the last word about whether it finished is allowed to land.</p>
 
     <div class="half">
       <div class="halfhead">
@@ -390,6 +390,60 @@ a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
       </ol>
     </div>
 
+    <div class="half">
+      <div class="halfhead">
+        <span class="halfname">Either side of the run</span>
+        <span class="halfcount">5 components</span>
+      </div>
+      <ol class="ledger">
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">10</span>
+            <span class="col">
+              <span class="gname">Agent work contract</span>
+              <span class="items">The declaration a run writes about itself before it fires, and the validator that refuses one nobody could grade afterwards. Its two load-bearing checks compare fields with each other, which a prose kickoff cannot do: the close flag against the write set, and the required artifacts against the same write set.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">11</span>
+            <span class="col">
+              <span class="gname">Model router</span>
+              <span class="items">One file holding every model identifier you use, and a resolver that turns a class of work into an identifier through a tier. An unknown class throws and is named, because a resolver that substitutes a default sends work to a model nobody picked and the call still looks like it succeeded.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">12</span>
+            <span class="col">
+              <span class="gname">Gate carrier</span>
+              <span class="items">The checks between your work and what leaves. Your own rules, proved to fire on a planted control and stay quiet on clean content in the same pass. A rule set that did not prove both directions refuses to scan anything at all.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">13</span>
+            <span class="col">
+              <span class="gname">Hostile root</span>
+              <span class="items">A pack pointed at a machine that already has files on it. An install proven on an empty directory is proven against the one condition no real machine is in.</span>
+            </span>
+          </div>
+        </li>
+        <li>
+          <div class="grp crimp v-gauge">
+            <span class="ord">14</span>
+            <span class="col">
+              <span class="gname">Completion signal</span>
+              <span class="items">The one directory the worker must not be able to write, and the grader that refuses a done flag the worker's own paths can reach. It grades a planted worker probe at the same jail as well as the flag, because a separation that only holds for today's flag name lasts until somebody renames it.</span>
+            </span>
+          </div>
+        </li>
+      </ol>
+    </div>
+
     <h3>Also in the download</h3>
     <p class="fine dim">Two worked examples, start to verified finish. Trap sheets for the two components with the most traps. An install manual, and an instructions file written for your own assistant to follow.</p>
   </div>
@@ -454,7 +508,7 @@ a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
   <div class="body">
     <h3>Item by item</h3>
     <ul class="limits">
-      <li><span class="lname">No cross-component routing, dispatch or capacity layer.</span> The nine components are parts. The layer that decides which worker takes which job is not in this release and is not coming in a later one. The parts are yours; the conductor is not.</li>
+      <li><span class="lname">No cross-component routing, dispatch or capacity layer.</span> The fourteen components are parts. The layer that decides which worker takes which job is not in this release and is not coming in a later one. Routing a class of work to a model tier is not routing a worker to a job. The parts are yours; the conductor is not.</li>
       <li><span class="lname">No values tuned to your work.</span> Every file is generic by construction, and everything specific comes from files you fill in.</li>
       <li><span class="lname">No agent that acts inside your environment.</span> Nothing here installs itself. Your own assistant does the installing, on your machine, under your hand.</li>
       <li><span class="lname">No support entitlement, no onboarding call, no setup review.</span> The test applied to every item in this release: could this be delivered by a file with nobody on our side?</li>
@@ -478,8 +532,8 @@ a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
     </div>
 
     <ul class="terms">
-      <li><span class="k">Delivery</span><span class="v">Release 1.0, delivered the moment you pay. The download link stays live for 365 days.</span></li>
-      <li><span class="k">File list</span><span class="v">83 files. The list, with sizes and checksums for the 81 content files, is published before you buy: <a href="../manifests/">the release manifests</a> (two delivery-state files are excluded from hashing by design, and the manifest says so). The release checks the hashed files against it before it runs anything.</span></li>
+      <li><span class="k">Delivery</span><span class="v">Release 1.1, delivered the moment you pay. The download link stays live for 365 days.</span></li>
+      <li><span class="k">File list</span><span class="v">106 files. The list, with sizes and checksums for all 106, is published before you buy: <a href="../manifests/">the release manifests</a>. Inside the download, 104 of them are verified against a shipped checksum manifest, which the release checks before it runs anything; the two exceptions are that manifest itself, which cannot carry its own hash, and the one file the release asks you to fill in.</span></li>
       <li><span class="k">Runtime</span><span class="v">Built and tested on Node 18 or newer, with no dependencies, no network access and no account. That is a description of this release, not a promise about future ones.</span></li>
       <li><span class="k">Billing</span><span class="v">No subscription, no recurring charge, nothing to cancel.</span></li>
       <li><span class="k">Refund</span><span class="v">14 days, on request, no questions. You keep the files.</span></li>
