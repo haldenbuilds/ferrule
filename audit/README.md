@@ -36,10 +36,6 @@ From your project directory:
 node harness-audit.mjs
 ```
 
-Before it reads configuration, the command checks all six files named by `MANIFEST.json`
-against their byte lengths and SHA-256 digests. A malformed manifest, missing file, or
-changed file refuses with exit 3.
-
 That writes two files into the current directory:
 
 | file | what it is |
@@ -69,7 +65,7 @@ On Windows PowerShell the same commands work unchanged.
 | | |
 |---|---|
 | **Reads** | your configuration files, your instruction files, and file names and timestamps under your project |
-| **Runs** | the audit path launches nothing. `--self-test` launches this production CLI against local synthetic fixtures. There is no shell or eval |
+| **Runs** | nothing. There is no subprocess, no shell, and no eval anywhere in the engine |
 | **Sends** | nothing. There is no network call in the engine. Search it for `fetch` and `http` and you will find neither |
 | **Writes** | only inside `--out`. Nothing else on disk is touched |
 | **Opens** | never a file it flags as credential-shaped. It matches on the name and stops there |
@@ -118,10 +114,6 @@ node harness-audit.mjs --self-test
 
 This builds two harnesses in a temporary directory: one with defects planted on purpose, one with the same shape and none of them. It then asserts that the engine reports **exactly** the planted list against the first and **none** of that list against the second.
 
-The self-test launches the real buyer entrypoint for both halves. It also checks Markdown
-and JSON report writes, path redaction, threshold exits in both directions, malformed
-manifest refusal, missing-file refusal, and strict rejection of bare or unknown arguments.
-
 Both halves matter. A checker that always fires is as useless as one that never does, and only running the broken half would hide that.
 
 To read the fixtures yourself:
@@ -146,7 +138,7 @@ Three files, and only one of them is code.
 
 **To brand it:** set `brand.name` and `brand.line` in `audit-copy.json`. Nothing is compiled in.
 
-**To point readers somewhere:** the `routes` block at the bottom of `audit-copy.json` maps a finding id and the severity it reported, written `<id>.<severity>`, to a place you would send someone who wants to close it. Fifteen of the twenty-three ids carry one and eight are left empty, and the block names which eight and why. The key is read for exactly the row being printed, so a check that can report more than one thing routes per reading, and the severity you did not write a route for prints none. An empty route prints nothing, and a route that does not help is worse than no route. A route never prints against a finding that came back clear. Replace ours with your own, or empty the block.
+**To point readers somewhere:** the `routes` block at the bottom of `audit-copy.json` maps a finding id to a place you would send someone who wants to close it. It ships empty on purpose. An empty route prints nothing, and a route that does not help is worse than no route.
 
 **To support another setup:** copy a profile entry in `harness-profiles.json` and change the paths. `configDir` lets the same entry work whether the reader points at their project or at their config directory.
 
@@ -168,9 +160,11 @@ Stated here as well as in every report, because a limit that only appears in the
 
 ## Version and compatibility
 
-**Version 1.0.3.**
+**Version 1.0.1.**
 
-Fixed in 1.0.3, and worth stating plainly because it concerns your privacy: on Windows, `--redact` cleaned the Markdown report but not the JSON record, which could still contain your home directory. The Markdown was always clean, and macOS and Linux were never affected. If you ran 1.0.2 or earlier on Windows with `--redact` and shared `harness-audit-report.json` with anyone, open it and check before assuming it was scrubbed. The self-test now walks the JSON record string by string, and runs an unredacted control first so the check cannot pass by finding nothing.
+Fixed in 1.0.1, and worth stating plainly because it concerns your privacy: on Windows, `--redact` cleaned the Markdown report but not the JSON record, which could still contain your home directory. The Markdown was always clean, and macOS and Linux were never affected. If you ran an earlier version on Windows with `--redact` and shared `harness-audit-report.json` with anyone, open it and check before assuming it was scrubbed. The self-test now walks the JSON record string by string, and runs an unredacted control first so the check cannot pass by finding nothing.
+
+This release also verifies its own delivery before it reads anything: `MANIFEST.json` names the other six shipped files with their byte lengths and SHA-256 digests, and the tool refuses to run if any of them has moved. Argument handling is stricter for the same reason, and refuses rather than guessing.
 
 This release runs on Node 18 or newer and reads the setups listed in `harness-profiles.json`. That is the stated compatibility range and it is what this version is.
 
