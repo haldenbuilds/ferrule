@@ -48,7 +48,7 @@ import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ENTRYPOINT = fileURLToPath(import.meta.url);
-const TOOL_VERSION = '1.0.3';
+const TOOL_VERSION = '1.0.1';
 const DELIVERY_FILE_COUNT = 6;
 
 const SEVERITY_ORDER = ['ok', 'note', 'unknown', 'gap', 'blocker'];
