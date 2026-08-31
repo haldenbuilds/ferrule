@@ -11,7 +11,8 @@
  * never counted as a pass. A tool that only ever returns green is decoration.
  *
  * POSTURE, stated so you can verify it rather than trust it:
- *   - reads files, runs nothing. No subprocess, no shell, no eval.
+ *   - the audit path reads files and runs nothing. No shell, no eval, no network.
+ *   - --self-test launches this production CLI against local synthetic fixtures only.
  *   - no network. This file contains no fetch, no http, no socket.
  *   - writes only inside --out (default: the current directory). Nothing else on disk is touched.
  *   - never prints the contents of a file it flags as secret-shaped. Paths only.
@@ -41,10 +42,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { createHash } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const TOOL_VERSION = '1.0.0';
+const ENTRYPOINT = fileURLToPath(import.meta.url);
+const TOOL_VERSION = '1.0.3';
+const DELIVERY_FILE_COUNT = 6;
 
 const SEVERITY_ORDER = ['ok', 'note', 'unknown', 'gap', 'blocker'];
 const rank = (s) => SEVERITY_ORDER.indexOf(s);
@@ -69,6 +74,65 @@ function readJsonSafe(p) {
   } catch (e) {
     return { ok: false, reason: String(e.message || e), value: null };
   }
+}
+
+function deliveryFailure(message) {
+  console.error(`[harness-audit] CANNOT RUN: delivery verification failed: ${message}`);
+  return 3;
+}
+
+// Verify the package before reading audit-copy.json, harness-profiles.json, or the fixture.
+// MANIFEST.json cannot list itself, so it names the other six shipped files exactly.
+function verifyDelivery() {
+  const manifestPath = path.join(HERE, 'MANIFEST.json');
+  const manifestRes = readJsonSafe(manifestPath);
+  if (!manifestRes.ok) return { ok: false, reason: `MANIFEST.json ${manifestRes.reason}` };
+  const manifest = manifestRes.value;
+  if (!Number.isInteger(manifest?.file_count) || manifest.file_count !== DELIVERY_FILE_COUNT) {
+    return { ok: false, reason: `MANIFEST.json file_count must be ${DELIVERY_FILE_COUNT}` };
+  }
+  if (!Array.isArray(manifest.files) || manifest.files.length !== manifest.file_count) {
+    return { ok: false, reason: `MANIFEST.json must list exactly ${manifest.file_count} files` };
+  }
+
+  const seen = new Set();
+  for (const entry of manifest.files) {
+    if (!entry || typeof entry.path !== 'string' || !entry.path.trim()) {
+      return { ok: false, reason: 'MANIFEST.json contains an entry without a path' };
+    }
+    const rel = entry.path.replaceAll('\\', '/');
+    if (rel === 'MANIFEST.json' || path.isAbsolute(rel) || rel.split('/').includes('..')) {
+      return { ok: false, reason: `MANIFEST.json contains an unsafe path: ${entry.path}` };
+    }
+    if (seen.has(rel)) return { ok: false, reason: `MANIFEST.json lists ${rel} more than once` };
+    seen.add(rel);
+    if (!Number.isInteger(entry.bytes) || entry.bytes < 0) {
+      return { ok: false, reason: `MANIFEST.json has no usable byte length for ${rel}` };
+    }
+    if (typeof entry.sha256 !== 'string' || !/^[0-9a-f]{64}$/i.test(entry.sha256)) {
+      return { ok: false, reason: `MANIFEST.json has no usable sha256 for ${rel}` };
+    }
+
+    const abs = path.resolve(HERE, rel);
+    if (path.dirname(abs) !== HERE) return { ok: false, reason: `MANIFEST.json path leaves the package: ${rel}` };
+    let body;
+    let stat;
+    try {
+      body = fs.readFileSync(abs);
+      stat = fs.statSync(abs);
+    } catch (e) {
+      return { ok: false, reason: `listed file is missing or unreadable: ${rel} (${e.message})` };
+    }
+    if (!stat.isFile()) return { ok: false, reason: `listed path is not a file: ${rel}` };
+    if (stat.size !== entry.bytes) {
+      return { ok: false, reason: `byte length mismatch for ${rel}: expected ${entry.bytes}, found ${stat.size}` };
+    }
+    const digest = createHash('sha256').update(body).digest('hex');
+    if (digest !== entry.sha256.toLowerCase()) {
+      return { ok: false, reason: `sha256 mismatch for ${rel}` };
+    }
+  }
+  return { ok: true, checked: seen.size };
 }
 
 function statSafe(p) {
@@ -671,19 +735,60 @@ function runAudit(opts) {
 
 function makeRedactor(projectDir, homeDir, enabled) {
   if (!enabled) return (s) => s;
-  const pairs = [
+  const roots = [
     [path.resolve(projectDir), '<PROJECT>'],
     [path.resolve(homeDir), '<HOME>'],
-  ].sort((a, b) => b[0].length - a[0].length);
+  ];
+  // A root is written three different ways in the material we scan, and a redactor that
+  // knows only the first leaks through the other two. Native separators are what the OS
+  // hands us; POSIX separators appear in config files authored by hand; the backslash-
+  // doubled form is what any JSON blob carries once it has been through JSON.stringify,
+  // which is how a Windows --redact run used to emit a clean Markdown report beside a
+  // JSON record that still held the operator's home directory. Case-folding matters on
+  // Windows for the same reason: the same directory is reachable as C:\Users and c:\users.
+  const pairs = [];
+  for (const [root, tag] of roots) {
+    const forms = new Set([root, root.split(path.sep).join('/'), root.split('\\').join('\\\\')]);
+    for (const form of forms) pairs.push([form, tag]);
+  }
+  pairs.sort((a, b) => b[0].length - a[0].length);
+  const flags = process.platform === 'win32' ? 'gi' : 'g';
+  const rules = pairs.map(([from, to]) => [new RegExp(from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), flags), to]);
   return (s) => {
     if (typeof s !== 'string') return s;
     let out = s;
-    for (const [from, to] of pairs) {
-      const alt = from.split(path.sep).join('/');
-      out = out.split(from).join(to).split(alt).join(to);
-    }
+    for (const [re, to] of rules) out = out.replace(re, to);
     return out;
   };
+}
+
+// Redact a structure by walking it, never by round-tripping it through JSON. Redacting a
+// stringified blob applies the rules to text that has already been escaped, so nothing
+// matches and the leak is silent. Keys are redacted too: an inventory keyed by path puts
+// the path in the key, where a value-only walk would not look.
+function redactDeep(value, redact) {
+  if (typeof value === 'string') return redact(value);
+  if (Array.isArray(value)) return value.map((v) => redactDeep(v, redact));
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) out[redact(k)] = redactDeep(v, redact);
+    return out;
+  }
+  return value;
+}
+
+// Every string anywhere inside a structure, for assertions that must see leaks the way a
+// reader of the file would rather than the way JSON.stringify re-escapes them.
+function deepStrings(value, acc = []) {
+  if (typeof value === 'string') acc.push(value);
+  else if (Array.isArray(value)) for (const v of value) deepStrings(v, acc);
+  else if (value && typeof value === 'object') {
+    for (const [k, v] of Object.entries(value)) {
+      acc.push(k);
+      deepStrings(v, acc);
+    }
+  }
+  return acc;
 }
 
 /* ------------------------------------------------------------------ rendering */
@@ -761,7 +866,17 @@ function renderMarkdown(result, ctx) {
         L.push(`**What closes it.** ${variant.fix}`);
         L.push('');
       }
-      const route = copy.routes && copy.routes[r.id];
+      // A route never prints against a clear finding. There is nothing to close, so a pointer
+      // here would be an advertisement wearing a finding's clothes, and one of those makes every
+      // other route in the report worth less.
+      //
+      // And a route is written for one severity of one check, so it is keyed by both and prints
+      // under neither of the others. Keyed by id alone, the pointer written for H11 reporting a
+      // hook that names a missing file also printed under the same check reporting that it could
+      // not tell, one line below that reading's own fix line, which says there is nothing to fix.
+      // A severity nobody wrote a route for gets silence here, and so does a severity some later
+      // version adds: the default is no pointer, and a pointer has to be asked for by name.
+      const route = sev === 'ok' ? null : copy.routes && copy.routes[`${r.id}.${sev}`];
       if (route && String(route).trim()) {
         L.push(`**Where that lives.** ${route}`);
         L.push('');
@@ -804,10 +919,10 @@ function renderJson(result, ctx) {
       id: r.id,
       group: r.group,
       severity: r.severity,
-      facts: JSON.parse(redact(JSON.stringify(r.facts))),
+      facts: redactDeep(r.facts, redact),
       evidence: r.evidence.map((e) => redact(String(e))),
     })),
-    inventory: JSON.parse(redact(JSON.stringify(result.inventory))),
+    inventory: redactDeep(result.inventory, redact),
   };
 }
 
@@ -832,31 +947,109 @@ function materialise(blueprint, destDir) {
   return destDir;
 }
 
+function spawnCli(entrypoint, args, cwd) {
+  return spawnSync(process.execPath, [entrypoint, ...args], {
+    cwd,
+    encoding: 'utf8',
+    windowsHide: true,
+  });
+}
+
+function copyPackage(destDir, omit = null) {
+  fs.mkdirSync(destDir, { recursive: true });
+  for (const name of ['MANIFEST.json', 'audit-copy.json', 'harness-audit.mjs', 'harness-profiles.json', 'README.md', 'REPORT-SHAPE.md', 'selftest-fixture.json']) {
+    if (name !== omit) fs.copyFileSync(path.join(HERE, name), path.join(destDir, name));
+  }
+  return path.join(destDir, 'harness-audit.mjs');
+}
+
 function selfTest(ctx) {
   const say = (m) => console.log(`[harness-audit] ${m}`);
   const blueprints = ctx.fixture;
   const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'harness-audit-selftest-'));
   let failures = 0;
+  const expect = (condition, message) => {
+    if (condition) say(`  PASS ${message}`);
+    else {
+      say(`  FAIL ${message}`);
+      failures++;
+    }
+  };
   try {
+    // Production path, both halves. Each run launches this release entrypoint in a child
+    // process, writes both reports, redacts fixture paths, and exercises the threshold.
     for (const half of ['broken', 'clean']) {
       const bp = blueprints[half];
       const dir = materialise(bp, path.join(tmpRoot, half));
-      const res = runAudit({ ...ctx, projectDir: dir, homeDir: dir });
-      const actual = new Set(res.findings.rows.filter((r) => r.severity !== 'ok').map((r) => `${r.id}:${r.severity}`));
+      const out = path.join(tmpRoot, `${half}-out`);
+      const run = spawnCli(ENTRYPOINT, ['--project', dir, '--home', dir, '--out', out, '--redact', '--fail-on', 'gap'], HERE);
+      const expectedExit = half === 'broken' ? 1 : 0;
+      expect(run.status === expectedExit, `half '${half}' production threshold exit is ${expectedExit} (found ${run.status})`);
+      const mdPath = path.join(out, 'harness-audit-report.md');
+      const jsonPath = path.join(out, 'harness-audit-report.json');
+      expect(fs.existsSync(mdPath) && fs.existsSync(jsonPath), `half '${half}' wrote Markdown and JSON reports`);
+
+      let record = null;
+      let md = '';
+      try {
+        record = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+        md = fs.readFileSync(mdPath, 'utf8');
+      } catch (e) {
+        say(`  FAIL half '${half}' report rendering could not be read: ${e.message}`);
+        failures++;
+      }
+      const actual = new Set((record?.findings ?? []).filter((r) => r.severity !== 'ok').map((r) => `${r.id}:${r.severity}`));
       const expected = new Set(bp.expect);
       const missed = [...expected].filter((e) => !actual.has(e));
       const extra = [...actual].filter((a) => !expected.has(a));
-      say(`half '${half}': expected ${expected.size} finding(s), engine produced ${actual.size}`);
-      if (missed.length) {
-        say(`  FAIL missed: ${missed.join(', ')}`);
-        failures++;
-      }
-      if (extra.length) {
-        say(`  FAIL unexpected: ${extra.join(', ')}`);
-        failures++;
-      }
-      if (!missed.length && !extra.length) say(`  PASS exact match`);
+      say(`half '${half}': expected ${expected.size} finding(s), production CLI rendered ${actual.size}`);
+      expect(missed.length === 0, `half '${half}' missed no expected finding${missed.length ? ` (${missed.join(', ')})` : ''}`);
+      expect(extra.length === 0, `half '${half}' added no unexpected finding${extra.length ? ` (${extra.join(', ')})` : ''}`);
+      const rendered = record?.engine_version === TOOL_VERSION && md.startsWith(`# ${ctx.copy.brand.name}\n`);
+      expect(rendered, `half '${half}' rendered the ${TOOL_VERSION} report shape`);
+      // Read the leak the way someone opening the file would. The assertion this replaces
+      // re-stringified the already-parsed record and searched it for the unescaped path,
+      // which an escaped blob can never contain: it passed on every run while the JSON
+      // record leaked the full home directory. A privacy check that cannot fail is worse
+      // than none, because it is reported as evidence.
+      const needle = dir.toLowerCase();
+      const leaked = deepStrings(record ?? {}).filter((s) => s.toLowerCase().includes(needle));
+      expect(
+        leaked.length === 0 && !md.includes(dir) && record?.scanned?.redacted === true,
+        `half '${half}' redacted the fixture path${leaked.length ? ` — JSON leaked ${leaked.length} string(s), first: ${leaked[0]}` : ''}`,
+      );
+
+      // Must-accept control. Without --redact the same path has to appear in both reports.
+      // Without this, "found no paths" cannot be distinguished from "there were no paths to
+      // find", and the assertion above would pass just as happily on an empty file.
+      const bareOut = `${out}-bare`;
+      spawnCli(ENTRYPOINT, ['--project', dir, '--home', dir, '--out', bareOut], HERE);
+      let bareRecord = null;
+      try {
+        bareRecord = JSON.parse(fs.readFileSync(path.join(bareOut, 'harness-audit-report.json'), 'utf8'));
+      } catch { /* asserted below */ }
+      const bareHits = deepStrings(bareRecord ?? {}).filter((s) => s.toLowerCase().includes(needle));
+      expect(bareHits.length > 0, `half '${half}' control: unredacted JSON does contain the path (probe can detect a leak)`);
     }
+
+    // Argument controls. The release entrypoint must refuse both an unknown option and a
+    // bare operand. These launch the production file, not parseArgs in isolation.
+    for (const bad of [['--unknown-option'], ['bare-operand']]) {
+      const run = spawnCli(ENTRYPOINT, bad, HERE);
+      expect(run.status === 3 && /CANNOT RUN: bad arguments/.test(run.stderr), `bad argument ${JSON.stringify(bad[0])} refuses with exit 3`);
+    }
+
+    // Delivery controls use isolated copies so the shipped tree is never modified.
+    const malformedDir = path.join(tmpRoot, 'malformed-manifest-package');
+    const malformedEntry = copyPackage(malformedDir);
+    fs.writeFileSync(path.join(malformedDir, 'MANIFEST.json'), '{not-json', 'utf8');
+    const malformed = spawnCli(malformedEntry, ['--version'], malformedDir);
+    expect(malformed.status === 3 && /delivery verification failed/.test(malformed.stderr), 'malformed MANIFEST.json refuses before configuration is read');
+
+    const missingDir = path.join(tmpRoot, 'missing-file-package');
+    const missingEntry = copyPackage(missingDir, 'audit-copy.json');
+    const missing = spawnCli(missingEntry, ['--version'], missingDir);
+    expect(missing.status === 3 && /listed file is missing or unreadable: audit-copy.json/.test(missing.stderr), 'missing manifest-listed file refuses before configuration is read');
   } finally {
     try {
       fs.rmSync(tmpRoot, { recursive: true, force: true });
@@ -875,22 +1068,52 @@ function selfTest(ctx) {
 /* ------------------------------------------------------------------ cli */
 
 function parseArgs(argv) {
+  const flagNames = new Set(['help', 'version', 'redact', 'self-test']);
+  const valueNames = new Set(['project', 'home', 'out', 'stale-days', 'fail-on', 'emit-fixture']);
   const a = { flags: new Set(), values: {} };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
-    if (!t.startsWith('--')) continue;
+    if (!t.startsWith('--')) throw new Error(`bare operand is not accepted: ${t}`);
     const key = t.slice(2);
+    if (!key || t.includes('=')) throw new Error(`unsupported token: ${t}`);
+    if (!flagNames.has(key) && !valueNames.has(key)) throw new Error(`unknown option: ${t}`);
+    if (a.flags.has(key) || Object.prototype.hasOwnProperty.call(a.values, key)) throw new Error(`duplicate option: ${t}`);
+    if (flagNames.has(key)) {
+      a.flags.add(key);
+      continue;
+    }
     const next = argv[i + 1];
-    if (next && !next.startsWith('--')) {
-      a.values[key] = next;
-      i++;
-    } else a.flags.add(key);
+    if (!next || next.startsWith('--')) throw new Error(`${t} requires one value`);
+    a.values[key] = next;
+    i++;
+  }
+
+  const actions = ['help', 'version', 'self-test'].filter((key) => a.flags.has(key));
+  if (a.values['emit-fixture']) actions.push('emit-fixture');
+  if (actions.length > 1) throw new Error(`choose one action, not ${actions.join(', ')}`);
+  if (actions.length === 1 && argv.length !== (actions[0] === 'emit-fixture' ? 2 : 1)) {
+    throw new Error(`--${actions[0]} cannot be combined with audit options`);
+  }
+  if (a.values['stale-days'] !== undefined && (!/^\d+$/.test(a.values['stale-days']) || Number(a.values['stale-days']) < 1)) {
+    throw new Error('--stale-days must be a positive integer');
+  }
+  if (a.values['fail-on'] !== undefined && !['none', 'note', 'unknown', 'gap', 'blocker'].includes(a.values['fail-on'].toLowerCase())) {
+    throw new Error('--fail-on must be one of none, note, unknown, gap, blocker');
   }
   return a;
 }
 
 function main() {
-  const args = parseArgs(process.argv.slice(2));
+  let args;
+  try {
+    args = parseArgs(process.argv.slice(2));
+  } catch (e) {
+    console.error(`[harness-audit] CANNOT RUN: bad arguments: ${e.message}`);
+    process.exit(3);
+  }
+
+  const delivery = verifyDelivery();
+  if (!delivery.ok) process.exit(deliveryFailure(delivery.reason));
 
   const copyRes = readJsonSafe(path.join(HERE, 'audit-copy.json'));
   const profRes = readJsonSafe(path.join(HERE, 'harness-profiles.json'));
@@ -905,7 +1128,7 @@ function main() {
   const cfg = profRes.value;
 
   if (args.flags.has('version')) {
-    console.log(`${copy.brand.name} engine ${TOOL_VERSION}`);
+    console.log(`${copy.brand.name} engine ${TOOL_VERSION} (${delivery.checked}/${DELIVERY_FILE_COUNT} delivery files verified)`);
     process.exit(0);
   }
   if (args.flags.has('help')) {
