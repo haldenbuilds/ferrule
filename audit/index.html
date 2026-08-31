@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" data-look="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>FERRULE Harness Audit, published source</title>
+<meta name="description" content="The published source of the FERRULE Harness Audit: a read-only look at your coding-agent setup that reports what you have, what you do not have, and what it could not see. MIT, Node 18 or newer, no packages.">
+<style>
+/* FERRULE v2, CRIMP MARK. Self-contained: no fetched fonts, no images,
+   no external stylesheet, no script. Token source of truth: tokens-v2.css.
+   Token block carried verbatim from pages/free/index.html, which is
+   byte-identical to pages/proof-set/index.html (the two fullest of the
+   three siblings; sha256 of the :root block 19cce169104ae372...). */
+:root{
+  --ink-950:#090a09; --ink-900:#0c0e0d; --ink-850:#101211; --ink-800:#141716;
+  --ink-750:#191c1b; --ink-700:#1e2221; --ink-650:#252a28;
+  --line:#212624; --line-2:#2c3230; --line-3:#3a413e;
+  --metal-900:#1c201f; --metal-700:#363c3a; --metal-500:#666e6a;
+  --metal-300:#9ba39c; --metal-100:#c6ccc4; --metal-spec:#e4e8df;
+  --gauge:#7fa3b4; --gauge-mid:#6b8d9d; --gauge-lo:#4e6875; --gauge-dim:#35474f;
+  --gauge-wash:rgba(127,163,180,.10); --gauge-glow:rgba(127,163,180,.26);
+  --pass:#47a97c; --pass-hi:#71c79b; --pass-ex:#3e8a68;
+  --pass-wash:rgba(71,169,124,.13); --pass-glow:rgba(71,169,124,.30);
+  --hold:#c58a33; --hold-hi:#e0ac5e; --hold-wash:rgba(197,138,51,.12); --hold-glow:rgba(197,138,51,.28);
+  --fail:#d6483c; --fail-hi:#ee7166; --fail-wash:rgba(214,72,60,.12); --fail-glow:rgba(214,72,60,.26);
+  --unknown:#8b938d; --unknown-hi:#adb4ae; --unknown-wash:rgba(139,147,141,.10); --unknown-glow:rgba(139,147,141,.16);
+  --type-hi:#e7e9e3; --type:#c4c9c2; --type-2:#8f958e; --type-3:#616763; --type-4:#3d433f;
+  --face-mono:Consolas,"Cascadia Mono","Cascadia Code","SFMono-Regular","SF Mono",Menlo,"DejaVu Sans Mono","Liberation Mono","Courier New",monospace;
+  --face-din:Bahnschrift,"DIN Alternate","DIN Condensed","Avenir Next Condensed","HelveticaNeue-CondensedBold","Liberation Sans Narrow","DejaVu Sans Condensed","Segoe UI",system-ui,sans-serif;
+  --face-text:Bahnschrift,"Segoe UI Variable Text","Segoe UI","Helvetica Neue","Liberation Sans",system-ui,sans-serif;
+  --f-micro:clamp(10px,.62rem + .10vw,12px);
+  --f-fine:clamp(12px,.74rem + .18vw,14px);
+  --f-body:clamp(15px,.90rem + .22vw,17px);
+  --f-lead:clamp(17px,1.00rem + .40vw,21px);
+  --f-sub:clamp(21px,1.10rem + .90vw,30px);
+  --f-head:clamp(29px,1.35rem + 2.20vw,52px);
+  --s-1:6px; --s-2:12px; --s-3:20px; --s-4:32px; --s-5:52px; --s-6:84px;
+  --edge:2px; --hair:1px;
+  --tex-c:214,224,214; --knurl-pitch:4px; --knurl-alpha:.028;
+  --edge-hi:rgba(255,255,255,.055); --edge-lo:rgba(0,0,0,.55); --sink:rgba(0,0,0,.46);
+  --glow-c:168,196,176;
+  --ease:cubic-bezier(.22,.68,.24,1); --ease-out:cubic-bezier(.16,1,.30,1);
+  --dur-1:140ms; --dur-2:240ms; --dur-3:420ms;
+}
+/* Dark is the standard. Light is opt-in and never auto-switches:
+   set data-look="light" on <html>. */
+[data-look="light"]{
+  color-scheme:light;
+  --ink-950:#e9e7e0; --ink-900:#efede6; --ink-850:#f3f1ea; --ink-800:#f7f5ef;
+  --ink-750:#efede5; --ink-700:#e3e0d7; --ink-650:#d7d3c8;
+  --line:#d5d1c6; --line-2:#c2bdb0; --line-3:#a8a296;
+  --metal-900:#b9beb4; --metal-700:#9aa096; --metal-500:#787f76;
+  --metal-300:#5b625a; --metal-100:#444b44; --metal-spec:#333a34;
+  --gauge:#3d6070; --gauge-mid:#4f7182; --gauge-lo:#7996a4; --gauge-dim:#a9bec7;
+  --gauge-wash:rgba(61,96,112,.08); --gauge-glow:rgba(61,96,112,.14);
+  --pass:#1e7150; --pass-hi:#14563c; --pass-ex:#2f8963;
+  --pass-wash:rgba(30,113,80,.10); --pass-glow:rgba(30,113,80,.14);
+  --hold:#8a5a11; --hold-hi:#6b4409; --hold-wash:rgba(138,90,17,.10); --hold-glow:rgba(138,90,17,.14);
+  --fail:#a62a20; --fail-hi:#841d15; --fail-wash:rgba(166,42,32,.10); --fail-glow:rgba(166,42,32,.14);
+  --unknown:#5b615c; --unknown-hi:#434841; --unknown-wash:rgba(91,97,92,.09); --unknown-glow:rgba(91,97,92,.12);
+  --type-hi:#191a17; --type:#33352f; --type-2:#5c5f57; --type-3:#83867c; --type-4:#adb0a4;
+  --tex-c:40,44,40; --knurl-alpha:.030;
+  --edge-hi:rgba(255,255,255,.90); --edge-lo:rgba(0,0,0,.10); --sink:rgba(0,0,0,.10);
+  --glow-c:61,96,112;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{background-color:var(--ink-950)}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(58% 42% at 50% 8%, rgba(var(--glow-c),.048) 0%, rgba(var(--glow-c),.018) 44%, rgba(0,0,0,0) 76%),
+    radial-gradient(130% 100% at 50% 18%, var(--ink-850) 0%, var(--ink-900) 54%, var(--ink-950) 100%);
+  background-color:var(--ink-950);
+  color:var(--type);
+  font-family:var(--face-mono);
+  font-size:var(--f-body);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; align-items:center;
+  padding:var(--s-6) var(--s-3) var(--s-5);
+  overflow-x:hidden;
+}
+
+/* ---------------- the ferrule binds the wordmark ---------------- */
+.lockup{display:flex;align-items:center;gap:var(--s-2);width:100%;max-width:760px;margin:0 0 var(--s-5)}
+.band{flex:1 1 auto;height:3px;border-radius:2px;
+  background:linear-gradient(to right,rgba(155,163,156,0) 0%,var(--metal-900) 8%,var(--metal-500) 30%,var(--metal-spec) 50%,var(--metal-500) 70%,var(--metal-900) 92%,rgba(155,163,156,0) 100%);
+  box-shadow:0 1px 0 var(--edge-lo)}
+.cap{flex:none;width:3px;height:14px;border-radius:2px;background:linear-gradient(to bottom,var(--metal-300),var(--metal-900))}
+.wordmark{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-fine);letter-spacing:.42em;text-indent:.42em;color:var(--metal-100);
+  text-shadow:0 1px 0 var(--sink)}
+
+/* ---------------- masthead ---------------- */
+.masthead{width:100%;max-width:760px;margin-bottom:var(--s-4)}
+h1{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-sub);line-height:1.1;letter-spacing:.045em;text-indent:.045em;
+  text-transform:uppercase;color:var(--type-hi);margin:0}
+.lede{margin:var(--s-3) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-lead);line-height:1.55;color:var(--type);max-width:62ch}
+.sub-lede{margin:var(--s-2) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-body);line-height:1.62;color:var(--type-2);max-width:66ch}
+
+/* ---------------- the stack is the main landmark ---------------- */
+.stack{width:100%;max-width:760px;display:flex;flex-direction:column;align-items:stretch}
+
+/* ---------------- plates ---------------- */
+.plate{position:relative;width:100%;margin-top:var(--s-4);background:var(--ink-800);
+  border:var(--hair) solid var(--line);border-radius:var(--edge);
+  box-shadow:inset 0 1px 0 var(--edge-hi),0 1px 0 var(--edge-lo),0 20px 52px var(--sink)}
+.plate:first-child{margin-top:0}
+.plate::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch)),
+    repeating-linear-gradient(-45deg,rgba(var(--tex-c),var(--knurl-alpha)) 0px,rgba(var(--tex-c),var(--knurl-alpha)) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) var(--knurl-pitch))}
+
+.head{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4) 0}
+.kicker{flex:none;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.30em;text-indent:.30em;text-transform:uppercase;color:var(--gauge)}
+.tick{flex:1 1 auto;height:5px;
+  background-image:
+    linear-gradient(to bottom,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px),
+    repeating-linear-gradient(to right,var(--gauge-dim) 0px,var(--gauge-dim) 1px,rgba(0,0,0,0) 1px,rgba(0,0,0,0) 8px);
+  background-size:100% 1px,100% 5px;background-repeat:no-repeat,repeat-x;background-position:0 0,0 0}
+
+.body{padding:var(--s-3) var(--s-4) var(--s-4);position:relative;z-index:1}
+
+h2{font-family:var(--face-din);font-stretch:87.5%;font-weight:700;
+  font-size:var(--f-sub);line-height:1.14;letter-spacing:.03em;color:var(--type-hi);margin:0}
+.sub{margin:var(--s-1) 0 0;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-fine);letter-spacing:.10em;text-indent:.10em;text-transform:uppercase;
+  color:var(--gauge);max-width:none}
+h3{font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-fine);line-height:1.3;letter-spacing:.22em;text-indent:.22em;
+  text-transform:uppercase;color:var(--type-2);margin:var(--s-4) 0 var(--s-2)}
+p{margin:var(--s-3) 0 0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  line-height:1.62;color:var(--type);max-width:64ch}
+p.dim{color:var(--type-2)}
+p.fine{font-size:var(--f-fine)}
+
+/* ---------------- the crimp: the only vertical accent ---------------- */
+.crimp{position:relative;padding-left:var(--s-3)}
+.crimp::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:1px;
+  background-color:var(--crimp-c,var(--gauge));
+  background-image:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,rgba(0,0,0,0) 25%,
+    rgba(0,0,0,.70) 25%,rgba(0,0,0,.70) 29%,
+    rgba(0,0,0,0) 29%,rgba(0,0,0,0) 71%,
+    rgba(0,0,0,.70) 71%,rgba(0,0,0,.70) 75%,
+    rgba(0,0,0,0) 75%,rgba(0,0,0,0) 100%);
+  box-shadow:0 0 0 1px var(--edge-lo),0 0 9px var(--crimp-glow,rgba(0,0,0,0));
+  transform-origin:50% 50%;
+  animation:crimp var(--dur-2) var(--ease) backwards}
+.v-pass{--crimp-c:var(--pass);--crimp-glow:var(--pass-glow);--v-fg:var(--pass-hi)}
+.v-pass-ex{--crimp-c:var(--pass-ex);--crimp-glow:var(--pass-glow);--v-fg:var(--pass)}
+.v-hold{--crimp-c:var(--hold);--crimp-glow:var(--hold-glow);--v-fg:var(--hold-hi)}
+.v-fail{--crimp-c:var(--fail);--crimp-glow:var(--fail-glow);--v-fg:var(--fail-hi)}
+.v-unknown{--crimp-c:var(--unknown);--crimp-glow:var(--unknown-glow);--v-fg:var(--unknown-hi)}
+.v-gauge{--crimp-c:var(--gauge);--crimp-glow:var(--gauge-glow);--v-fg:var(--gauge)}
+
+/* ---------------- the verdict ladder ---------------- */
+.ladder{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.ladder li{margin-top:var(--s-2)}
+.rung{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.token{flex:none;font-family:var(--face-mono);font-weight:700;font-size:var(--f-fine);
+  letter-spacing:.06em;color:var(--v-fg,var(--type-hi));width:11em;overflow-wrap:anywhere}
+.gloss{flex:1 1 15em;min-width:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2)}
+
+/* ---------------- the run block ---------------- */
+.runs{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.runs li{margin-top:var(--s-3)}
+.cmd{display:block;font-family:var(--face-mono);font-size:var(--f-fine);line-height:1.55;
+  color:var(--type-hi);background:var(--ink-750);
+  border:var(--hair) solid var(--line-2);border-radius:var(--edge);
+  padding:10px var(--s-3);white-space:pre;overflow-x:auto;overflow-y:hidden;
+  box-shadow:inset 0 1px 0 var(--edge-hi)}
+.say{display:block;margin-top:var(--s-1);font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:64ch}
+
+/* ---------------- the posture and the limits ---------------- */
+.posture{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.posture li{margin-top:var(--s-2);display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.posture .k{flex:none;width:7em;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.16em;text-indent:.16em;text-transform:uppercase;color:var(--gauge)}
+.posture .v{flex:1 1 16em;min-width:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2)}
+.posture .v b{font-weight:600;color:var(--type)}
+
+.limits{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.limits li{margin-top:var(--s-2);font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:66ch}
+
+/* ---------------- terms ---------------- */
+.terms{list-style:none;margin:var(--s-2) 0 0;padding:0}
+.terms li{margin-top:var(--s-2);display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.terms .k{flex:none;width:9.5em;font-family:var(--face-din);font-stretch:87.5%;font-weight:600;
+  font-size:var(--f-micro);letter-spacing:.16em;text-indent:.16em;text-transform:uppercase;color:var(--gauge)}
+.terms .v{flex:1 1 16em;min-width:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2)}
+
+a{color:var(--gauge);text-decoration:none;border-bottom:1px solid var(--gauge-dim);
+  transition:border-color var(--dur-1) var(--ease),color var(--dur-1) var(--ease)}
+a:hover,a:focus-visible{color:var(--type-hi);border-bottom-color:var(--gauge)}
+a:focus-visible{outline:2px solid var(--gauge);outline-offset:2px}
+
+/* ---------------- foot ---------------- */
+.foot{width:100%;max-width:760px;margin-top:var(--s-5);display:flex;gap:var(--s-3);align-items:flex-start}
+.foot .rule{flex:none;width:26px;height:1px;margin-top:.72em;background:var(--line-3)}
+.foot p{margin:0;font-family:var(--face-text);font-stretch:100%;font-weight:400;
+  font-size:var(--f-fine);line-height:1.6;color:var(--type-2);max-width:62ch}
+
+@keyframes crimp{from{transform:scaleY(0);opacity:0}}
+@keyframes lift{from{opacity:0;transform:translateY(8px)}}
+.lockup{animation:lift var(--dur-3) var(--ease-out) backwards}
+.masthead{animation:lift var(--dur-3) var(--ease-out) 60ms backwards}
+.stack{animation:lift var(--dur-3) var(--ease-out) 120ms backwards}
+.foot{animation:lift var(--dur-3) var(--ease-out) 190ms backwards}
+
+@media (prefers-reduced-motion:reduce){
+  .lockup,.masthead,.stack,.foot,.crimp,.crimp::before,a{animation:none !important;transition:none !important}
+}
+@media (max-width:560px){
+  body{padding:var(--s-5) var(--s-2) var(--s-4)}
+  .head{padding:var(--s-2) var(--s-3) 0}
+  .body{padding:var(--s-3) var(--s-3) var(--s-3)}
+  .token{width:100%}
+  .posture .k,.terms .k{width:100%}
+}
+</style>
+</head>
+<body>
+
+<header class="lockup">
+  <span class="cap"></span>
+  <span class="band"></span>
+  <span class="wordmark">FERRULE</span>
+  <span class="band"></span>
+  <span class="cap"></span>
+</header>
+
+<div class="masthead">
+  <h1>Harness Audit, published source</h1>
+  <p class="lede">A read-only look at your coding-agent setup. It reports what you have, what you do not have, and what it could not see. It measures. It does not claim.</p>
+  <p class="sub-lede">This is the whole engine, in the open, under MIT. Read it first, then run it against your own machine. Node 18 or newer, no packages, no install step.</p>
+</div>
+
+<main class="stack">
+
+  <!-- ================= 01: WHAT IT REPORTS ================= -->
+  <section class="plate" aria-labelledby="reports">
+    <div class="head">
+      <span class="kicker">What it reports</span>
+      <span class="tick"></span>
+    </div>
+    <div class="body">
+      <h2 id="reports">The third column is the point</h2>
+      <p class="sub">Could not see is not a pass</p>
+
+      <p>Most setup checks return green or they return red. This one returns green, red, and could not see, and it prints that third category first.</p>
+
+      <p>The reason is the single failure the tool is aimed at. A hook that is written into your settings file, whose script exists on disk, and that has never once left a trace is indistinguishable from a hook that never runs. You cannot tell those two apart by reading the configuration, and reading the configuration is what every setup checker does. This one separates checked-and-clear from could-not-check, and refuses to add the second to the first.</p>
+
+      <h3>The five verdicts, in the order the report prints them</h3>
+      <ul class="ladder">
+        <li>
+          <div class="rung crimp v-unknown">
+            <span class="token">Could not see</span>
+            <span class="gloss">The check ran and could not reach its evidence. Printed first, because each line is a question about your setup that is currently open.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rung crimp v-fail">
+            <span class="token">Broken</span>
+            <span class="gloss">Something is declared but is not working, or a fence you appear to want is not in place. The configuration and the intent disagree.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rung crimp v-hold">
+            <span class="token">Missing</span>
+            <span class="gloss">An absent guardrail. Some of these you will not want, and deciding that is a legitimate outcome.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rung crimp v-gauge">
+            <span class="token">Worth knowing</span>
+            <span class="gloss">A property, not a defect.</span>
+          </div>
+        </li>
+        <li>
+          <div class="rung crimp v-pass">
+            <span class="token">Clear</span>
+            <span class="gloss">Checked and in place.</span>
+          </div>
+        </li>
+      </ul>
+
+      <p class="fine dim">23 checks, in seven groups: discovery, hook wiring, run evidence, permission fences, unattended-run wiring, instruction hygiene, and inventory. Where a hook path is built from a variable, the result is reported as could-not-see, never as a pass. A setup the tool has no profile for is reported as not detected, never as clean.</p>
+
+      <p class="fine dim">A finding is not an instruction. Several of them describe things a small project should not bother with. The value is that the decision becomes yours instead of accidental.</p>
+    </div>
+  </section>
+
+  <!-- ================= 02: RUN IT ================= -->
+  <section class="plate" aria-labelledby="run">
+    <div class="head">
+      <span class="kicker">Run it</span>
+      <span class="tick"></span>
+    </div>
+    <div class="body">
+      <h2 id="run">Three lines, no install</h2>
+      <p class="sub">Node 18 or newer. Nothing else</p>
+
+      <ul class="runs">
+        <li>
+          <code class="cmd">node harness-audit.mjs --project . --out ./audit-out</code>
+          <span class="say">Audits the current project and writes two files into <b>./audit-out</b>: the report you read, and the same result as JSON for diffing between runs.</span>
+        </li>
+        <li>
+          <code class="cmd">node harness-audit.mjs --redact</code>
+          <span class="say">Replaces your paths with placeholders in both the report and the JSON record, so a run can be shared.</span>
+        </li>
+        <li>
+          <code class="cmd">node harness-audit.mjs --self-test</code>
+          <span class="say">Builds two harnesses in a temporary directory, one with defects planted on purpose and one with the same shape and none of them, then asserts the engine reports exactly the planted list against the first and none of it against the second. A checker that always fires is as useless as one that never does.</span>
+        </li>
+      </ul>
+
+      <p class="fine dim">Exit codes: <b>0</b> it ran, <b>1</b> it ran and your <b>--fail-on</b> level was met, <b>3</b> it could not run and said why. On Windows PowerShell the same commands work unchanged.</p>
+    </div>
+  </section>
+
+  <!-- ================= 03: THE POSTURE ================= -->
+  <section class="plate" aria-labelledby="posture">
+    <div class="head">
+      <span class="kicker">The posture</span>
+      <span class="tick"></span>
+    </div>
+    <div class="body">
+      <h2 id="posture">Five lines you can check rather than trust</h2>
+      <p class="sub">The engine is one readable file</p>
+
+      <ul class="posture">
+        <li>
+          <span class="k">Reads</span>
+          <span class="v">Your configuration files, your instruction files, and file names and timestamps under your project.</span>
+        </li>
+        <li>
+          <span class="k">Runs</span>
+          <span class="v"><b>Nothing from your project.</b> No shell, no eval. The one subprocess in the file belongs to <b>--self-test</b>, which re-runs this same file with Node so the self-test grades the production path rather than a copy of it.</span>
+        </li>
+        <li>
+          <span class="k">Sends</span>
+          <span class="v"><b>Nothing.</b> There is no network call. Search the file for <b>fetch</b>, <b>http</b> and <b>socket</b>: the only hit is the header line stating that none are there.</span>
+        </li>
+        <li>
+          <span class="k">Writes</span>
+          <span class="v">Two files, into <b>--out</b>, or into the current directory if you do not pass it. Nothing else on disk is touched.</span>
+        </li>
+        <li>
+          <span class="k">Opens</span>
+          <span class="v"><b>Never a file it flags as credential-shaped.</b> It matches on the name, stops there, and reports the path only. A harmless file with a risky name gets flagged; a risky file with a harmless name does not.</span>
+        </li>
+      </ul>
+
+      <p class="fine dim">These are stated so you can check them rather than take them on faith, which is the reason the engine ships as a single file you can read in one sitting.</p>
+    </div>
+  </section>
+
+  <!-- ================= 04: IT VERIFIES ITS OWN DELIVERY ================= -->
+  <section class="plate" aria-labelledby="delivery">
+    <div class="head">
+      <span class="kicker">Delivery</span>
+      <span class="tick"></span>
+    </div>
+    <div class="body">
+      <h2 id="delivery">It verifies itself before it reads anything</h2>
+      <p class="sub">Six files, plus a manifest that cannot list itself</p>
+
+      <p><b>MANIFEST.json</b> names the other six shipped files with their byte lengths and SHA-256 digests, and the tool refuses to run if any of them has moved. The check happens before configuration is read, so a package that arrived incomplete stops with exit 3 and a reason rather than auditing you from a half-delivered engine.</p>
+
+      <p class="fine dim">A manifest cannot carry its own hash, which is why the count is six plus the manifest. The self-test covers this path in both directions: it asserts a malformed manifest refuses, and that a package missing a listed file refuses.</p>
+    </div>
+  </section>
+
+  <!-- ================= 05: LIMITS ================= -->
+  <section class="plate" aria-labelledby="limits">
+    <div class="head">
+      <span class="kicker">Limits</span>
+      <span class="tick"></span>
+    </div>
+    <div class="body">
+      <h2 id="limits">What it cannot tell you</h2>
+      <p class="sub">Stated here as well as in every report</p>
+
+      <p>A limit that only appears in the output is a limit people read once.</p>
+
+      <ul class="limits">
+        <li class="crimp v-unknown">It reads configuration and files. It does not watch a live session, so it cannot prove a hook fired today. It can prove that one left a trace, and that a declared one points at a file that is not there.</li>
+        <li class="crimp v-unknown">It checks one target per command, the script the interpreter is told to run. Arguments passed to that script are not followed.</li>
+        <li class="crimp v-unknown">The ignore-file check reads the ignore file in every directory between the file and your project root. It does not evaluate negation rules or the full pathspec grammar.</li>
+        <li class="crimp v-unknown">It matches credential-shaped names, never contents.</li>
+        <li class="crimp v-unknown">Counts of capabilities are counts of files and folders. It does not judge whether any of them are good.</li>
+        <li class="crimp v-unknown">It looks four directories deep from your project root and skips build and dependency folders.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= 06: SOURCE AND TERMS ================= -->
+  <section class="plate" aria-labelledby="terms">
+    <div class="head">
+      <span class="kicker">Source and terms</span>
+      <span class="tick"></span>
+    </div>
+    <div class="body">
+      <h2 id="terms">Where it lives, and what comes with it</h2>
+      <p class="sub">Files, and nothing attached to them</p>
+
+      <ul class="terms">
+        <li>
+          <span class="k">Version</span>
+          <span class="v">1.0.1, the version published in this source tree.</span>
+        </li>
+        <li>
+          <span class="k">Licence</span>
+          <span class="v"><a href="LICENSE">MIT</a>. Copyright 2026 haldenbuilds. The licence in this folder covers this folder.</span>
+        </li>
+        <li>
+          <span class="k">Source</span>
+          <span class="v">The complete tree is <a href="https://github.com/haldenbuilds/ferrule/tree/main/audit">published on GitHub</a>. The engine, the copy file that holds every sentence the report prints, and the profiles file that says where to look.</span>
+        </li>
+        <li>
+          <span class="k">Manifests</span>
+          <span class="v">File lists with sizes and checksums for the FERRULE releases are <a href="../manifests/">published separately</a>. That page covers the packaged downloads, which carry their own version numbers. The tree you are reading is versioned on its own line.</span>
+        </li>
+        <li>
+          <span class="k">Support</span>
+          <span class="v">There is no support entitlement, onboarding, or service component. Every product is designed to be delivered as files with nobody on our side. Issues on the repository are open as a feedback channel: everything is read, nothing is promised.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span class="rule"></span>
+  <p>Every claim on this page is checkable against the files in the tree above. That is the only reason to make claims about a tool whose whole subject is the difference between a setup that works and a setup that reads as though it does.</p>
+</footer>
+
+</body>
+</html>
