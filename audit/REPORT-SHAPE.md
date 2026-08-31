@@ -60,14 +60,10 @@ Evidence:
 
 **What closes it.**  what to do about it, from the copy file
 
-**Where that lives.**  optional, printed only when a route is set for this id at this severity
+**Where that lives.**  optional, printed only when a route is set
 ```
 
 Four fixed slots: what it found, the facts, what it costs, what closes it. The facts block is the only part the engine authors. Everything else is text-layer.
-
-The fifth slot is conditional three ways over. It prints only where `routes` in `audit-copy.json` carries a string keyed `<id>.<severity>` for exactly the row being printed, and never against a finding in the **Clear** section, because a finding with nothing to close has nowhere to be sent.
-
-A check that can report more than one thing therefore routes per reading rather than per check. `H11.blocker` is a hook declared against a file that is not there, and it carries a pointer. `H11.unknown` is the same check saying it could not tell, its own fix line says there is nothing to fix, and it carries none. A severity with no key of its own prints no route, which is also what a severity added in a later version gets until somebody writes one for it.
 
 ---
 
@@ -76,7 +72,7 @@ A check that can report more than one thing therefore routes per reading rather 
 ```json
 {
   "tool": "Harness Audit",
-  "engine_version": "1.0.3",
+  "engine_version": "1.0.1",
   "generated": "2026-08-15 21:33:19Z",
   "scanned": {
     "project": "<PROJECT>",
